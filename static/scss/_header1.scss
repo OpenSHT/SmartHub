@@ -1,0 +1,170 @@
+@import "./variables";
+
+nav {
+  background-image: $navbarback; //linear-gradient(#333, #222);
+  padding: 5px 20px;
+  position: relative;
+  box-shadow: 1px 1px 3px $inverted-text-dark, 0 0 25px $primary-accent-theme, 0 0 5px $secondary-accent-theme;
+  z-index: 9999;
+}
+
+.logo a:hover {
+  text-decoration: none;
+}
+
+.navmenu li {
+  font-size: 16px;
+  padding: 15px 5px;
+  white-space: nowrap;
+}
+
+.navmenu li a {
+  display: block;
+}
+
+.logo a {
+  font-size: 20px;
+  font-family: "Orbitron", sans-serif;
+  font-weight: 600;
+  text-shadow: 1px 1px 4px $inactive-text-dark;
+}
+
+.toggle a {
+  font-size: 20px;
+}
+
+/* Mobile menu */
+.navmenu {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  list-style-type: none;
+  flex: 1;
+}
+.toggle {
+  order: 1;
+}
+.item.button {
+  order: 2;
+}
+.item {
+  width: 100%;
+  text-align: center;
+  order: 3;
+  display: none;
+  font-family: 'Poppins-Med';
+}
+.item.active {
+  display: block;
+  background: transparent;
+}
+.item:hover {
+  border: 1px solid $active-text-dark;
+  border-radius: 4px;
+  box-shadow: 1px 1px 3px $active-text-dark;
+}
+.item.button:hover {
+  border: none;
+  box-shadow: none;
+}
+
+/* Navbar Toggle */
+.toggle {
+  cursor:pointer;
+}
+.bars {
+  background: $iconcolor;
+  display: inline-block;
+  height: 2px;
+  position: relative;
+  transition: background .2s ease-out;
+  width: 18px;
+  top: -5px;
+}
+.bars:before,
+.bars:after {
+  background: $iconcolor;
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  transition: all .2s ease-out;
+  width: 100%;
+}
+.bars:before {
+  top: 5px;
+}
+.bars:after {
+  top: -5px;
+}
+.bars:hover {
+  box-shadow: 0 0 15px $active-text-dark;
+}
+/* Tablet menu */
+@media all and (min-width: 468px) {
+  .navmenu {
+      justify-content: center;
+  }
+
+  .logo {
+      flex: 1;
+  }
+
+  .item.button {
+      width: auto;
+      order: 1;
+      display: block;
+  }
+  .toggle {
+      order: 2;
+  }
+  .button.secondary {
+      border: 0;
+  }
+  .button a {
+      padding: 7.5px 15px;
+      background: transparent;
+      border: 1px $active-text-dark solid;
+      border-radius:50em;
+  }
+  .button.secondary a {
+      background: transparent;    
+  }
+  .button a:hover {
+      text-decoration: none;
+      transition:all .25s;
+  }
+  .button:not(.secondary) a:hover { 
+    box-shadow: 0 0 7px $active-text-dark;
+  }
+  .button.secondary a:hover {
+      color: $active-text-dark;
+  } 
+}
+
+/* Desktop menu */
+@media all and (min-width: 768px) {
+  .item {
+      display: block;
+      width: auto;
+  }
+  .toggle {
+      display: none;
+  }
+  .logo {
+      order: 0;
+  }
+  .item {
+      order: 1;
+  }
+  .button {
+      order: 2;
+  }
+  .navmenu li {
+      padding: 15px 10px;
+  }
+  .navmenu li.button {
+      padding-right: 0;
+  }
+}

@@ -1,0 +1,57 @@
+# THIS IS ALL IN THE README.md
+
+RASPBIAN SETUP:
+
+	1. Write the iso using 'dd':
+	
+		sudo dd bs=4M if=2020-05-27-raspios-buster-armhf.img of=/dev/sdb conv=fdatasync status="progress"
+	
+	2. If using the HDMI&USB Connected monitors:
+	
+        i. With the fresh SD still plugged in, access the "/boot/config.txt" file
+        ii. add the following options:
+        
+            hdmi_force_hotplug=1
+            hdmi_group=2
+            hdmi_mode=87
+            hdmi_cvt=800 480 60 6 0 0 0
+            hdmi_drive=1
+            max_usb_current=1
+            
+        iii. Be sure to change to the appropriate resolution for the screen
+        
+        iv. https://learn.adafruit.com/adafruit-5-800x480-tft-hdmi-monitor-touchscreen-backpack/raspberry-pi-config
+ 
+    3. Setup Auto Update:
+    
+        i. 
+        
+            sudo apt-get install unattended-upgrades
+            
+        ii. create script /home/pi/Desktop/OpenSHT/.startup.sh
+        
+            #!/bin/sh
+            sudo apt-get update && sudo apt-get upgrade -y 
+            sudo rpi-update 
+            sudo apt-get autoremove 
+            sudo apt-get autoclean 
+            
+        ii. add your programs line to bottom of /etc/rc.local just before the 'exit 0' last line:
+            
+            ...
+            sudo bash /home/pi/Desktop/OpenSHT/.startup.sh
+            sudo python3 /home/pi/Desktop/OpenSHT/app.py &
+            exit 0
+	
+	4. Configure interfaces and hostname etc...:
+        
+        i. sudo nano /etc/hosts
+        
+        ii. add the hostname 'openhub' to localhost as well as any 'static' IP you may have reseved on your router 
+        
+Troubleshooting:
+
+    - "Permission denied" when trying to read a serial device:
+    
+        - sudo chmod a+rw /dev/ttyUSB0
+	

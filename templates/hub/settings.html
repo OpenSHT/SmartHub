@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+	{% block title %}
+		{{ title }}
+	{% endblock title %}
+
+	{% block main_content %}  
+		<main>
+			<div class="wrapper">
+				<!-- Sidebar  -->
+				<nav id="sidebar">
+					<div class="sidebar-header">
+						<h3><a href="/settings">Settings</a></h3>
+					</div>
+
+					<ul class="list-unstyled components">
+<!--						<p>Dummy Heading</p>-->
+						<li class="side-link">
+							<a href="/settings/Tscheduler">Scheduler</a>
+                        </li>
+                        <li class="side-link">
+							<a href="/settings/Tsetup">Relay Setup</a>
+                        </li>
+                        <li class="side-link">
+							<a href="/settings/Trooms">Rooms</a>
+                        </li>
+                        <li class="side-link">
+							<a href="/settings/Tsensors">Sensors</a>
+						</li>
+					</ul>
+
+					<ul class="list-unstyled button-block">
+						<li>
+							<a href="https://opensht.tech/blog" class="blog">Community Blog</a>
+						</li>
+						<li>
+							<a href="https://github.com/OpenSHT" class="github">Github Page</a>
+						</li>
+					</ul>
+					<p class="signature">Created by Craig Treen</p>
+				</nav>
+
+				<!-- Page Content  -->
+				<div id="content">
+
+					<button type="button" class="float small-screen" id="small-float">
+						<i class="fas fa-chevron-right my-float" id="sm-icon"></i>
+					</button>
+					<button type="button" class="float big-screen active" id="big-float">
+						<i class="fas fa-chevron-left my-float" id="bg-icon"></i>
+					</button>
+
+					{% block settings_form %}
+						<div class="setting-header">General Settings</div>
+
+						<div class="container">
+							<form id="general" action="#" method="post">
+								<div class="row">
+									<h3 class="setting-subheader">Background</h3>
+								</div>
+								<div class="row">
+									<div class="col-25">
+										<label for="image-type">Type: </label>
+									</div>
+									<div class="col-75">
+										<select id="image-type" name="image-type" onchange="showChooser(this.value, this)">
+											<option value="color">Solid Color</option>
+											<option value="image">Image</option>
+										</select>
+									</div>
+								</div>
+								<div class="row" id="hidden_choice_1">
+									<div class="col-25">
+										<label for="color-chooser">Select a Color: </label>
+									</div>
+									<div class="col-75">
+										<input type="color" id="color-chooser" name="color-chooser" value="#666666">
+									</div>
+								</div>
+								<div class="row" id="hidden_choice_2">
+									<div class="col-25">
+										<label for="file-chooser">Select a File: </label>
+									</div>
+									<div class="col-75">
+										<input type="file" id="file-chooser" name="file-chooser">
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-25">
+										<label for="image-position">Positioning: </label>
+									</div>
+									<div class="col-75">
+										<select id="image-position" name="image-position">
+											<option value="tiled">Tiled</option>
+											<option value="center">Centered</option>
+										</select>
+									</div>
+								</div>
+								<div class="row">
+									<h3 class="setting-subheader">Theme</h3>
+								</div>
+								<div class="row">
+									<div class="col-25">
+										<label for="interface-theme">Interface: </label>
+									</div>
+									<div class="col-75">
+										<select id="interface-theme" name="interface-theme">
+											<option value="light">Light</option>
+											<option value="dark">Dark</option>
+											<option value="black">Black</option>
+										</select>
+									</div>
+								</div>
+								<div class="row">
+									<h3 class="setting-subheader">Weather</h3>
+								</div>
+								<div class="row">
+									<div class="col-25">
+										<label for="location-search search-results">Location: </label>
+									</div>
+									<div class="col-75 search_wrapper">
+										<div class="location_search">
+											<input type="text" id="location-search" name="location-search" placeholder="City, CountryCode (CA, US, ...)"/>
+											<i class="fas fa-search-location"></i>
+											<select id="search-results" name="search-results">
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="row"></div>
+									<div class="col-25">
+										<label for="interface-unit">Units: </label>
+									</div>
+									<div class="col-75">
+										<select id="interface-unit" name="interface-unit">
+											<option value="metric">Metric(SI)</option>
+											<option value="imperial">Merica</option>
+										</select>
+									</div>
+								</div>
+								<div class="row">
+									<input class="general-settings" type="submit" value="Submit">
+								</div>
+							</form>
+						</div>
+					{% endblock settings_form %}
+				</div>
+			</div>
+		</main>
+	<!-- Settings JS -->
+	<script type="text/javascript" src="{{ url_for('static', filename = 'js/settings.js') }}" defer></script>
+	{% endblock main_content %}

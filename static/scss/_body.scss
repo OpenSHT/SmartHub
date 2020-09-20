@@ -1,0 +1,283 @@
+@import "./variables";
+
+main {
+    display: flex;
+    flex: 1;
+    flex-flow: column;
+    overflow: visible;   
+  }
+  
+.leftbox {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    flex: 1;
+    margin: 0;
+    padding: 15px 15px 15px 15px;
+    color: $active-text-dark;
+    font-family: "Orbitron", sans-serif;
+    font-weight: 500;
+    justify-content: space-around;
+    justify-items: center;
+    text-justify: center;
+    text-align: center;
+  }
+  
+.rightbox {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    flex: 1;
+    min-height: 300px;
+    margin: 0;
+    padding: 0px 15px 15px 15px;
+    color: $active-text-dark;
+    font-family: 'Poppins', sans-serif;
+    justify-content: center;
+    justify-items: center;
+    text-align: center;
+  }
+
+.sensordata, .weatherdata {
+  background: $boxcolor;
+  border: 2px solid $active-text-dark;
+  border-radius: 5px;
+  font-size: 5vw;
+  width: 100%;
+  flex: 1;
+}
+.sensordata {
+  min-height: 80px;
+  max-height: 100px;
+}
+
+.accordionflex {
+  display: flex;
+  flex-flow: column;
+  flex: 1;
+  width: 100%;
+  margin-top: 15px;
+  overflow: visible;
+}
+.accordion {
+  background: $boxcolor;
+  color: $inactive-text-dark;
+  font-size: calc(1.25rem + ((1vw - 4.68px) * 1.1019));
+  border: 2px solid $active-text-dark;
+  cursor: pointer;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  transition: 0.4s;
+  width: 100%;
+  text-align: center;
+  font-family: "Orbitron", sans-serif;
+  font-weight: 500;
+}
+.panel1 {
+  border-radius: 5px 5px 0px 0px;
+}
+.panel2 {
+  border-radius: 0px 0px 5px 5px;
+}
+.accordion.active, .accordion:hover {
+  background: $darkboxcolor;
+  color: $active-text-dark;
+}
+.panel {
+  font-size: 3vh;
+  padding: 5px 15px;
+  background: $boxcolor;
+  border: 2px solid $active-text-dark;
+  display: none;
+  overflow: hidden;
+  flex: 1;
+}
+
+.panel-page {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-evenly;
+  // align-content: center;
+  align-items: center;
+  // text-align: center;
+  height: 100%;
+  flex: 1;
+}
+
+.button-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  justify-items: center;
+  // vertical-align: middle;
+  margin-top: 3%;
+  // padding: 1vh;
+  min-height: 150px;
+  max-height: 100%;
+  height: 100%;
+}
+.button-container button {
+  width: 40%;
+  text-align: center;
+  font-size: calc(0.75rem + ((1vw - 4.68px) * 0.8264));
+  font-family: "Orbitron", sans-serif;
+  font-weight: 500;
+  margin: 1%;
+}
+
+.btn-huge {
+  background: rgba(0, 0, 0, 0.3);
+  color: $active-text-dark;
+  border: 2px $active-text-dark solid;
+  border-radius: 5px;
+}
+.btn-huge.active {
+  background: $secondary-accent-theme;
+  color: $active-text-dark;
+}
+.btn:hover {
+  cursor: pointer;
+  background: $secondary-accent-theme;
+  color: $active-text-dark;
+}
+
+.slider-box {
+  padding-top: 3vh;
+  width: 40%;
+  height: 10vh;
+}
+#sp-range-slider {
+  height: calc(1.25rem + ((1vw - 7.68px) * 1.7361));
+  border-radius: calc((1.25rem + ((1vw - 7.68px) * 1.7361)) / 2);
+  background: $temp-gradient;
+  border: 2px solid white;
+}
+#sp-handle {
+  margin: 0;
+  padding: 0;
+  width: calc(1.75rem + ((1.5vw - 7.68px) * 1.7361));
+  height: calc(1.75rem + ((1.5vw - 7.68px) * 1.7361));
+  border: 2px solid white;
+  border-radius: 50%;
+  background: $slider-handle;
+  // transform: translate(0px, 0vw);
+}
+#sp-handle:hover {
+  background: $slider-handle-hover;
+}
+
+.sp-show {
+  width: 40%;
+  height: 10vh;
+  text-align: center;
+  text-justify: center;
+  // margin: 15px 10px 15px 10px;
+  padding-top: 2vh;
+  text-align: center;
+  font-size: calc(1.5rem + ((1vw - 4.68px) * 2.2039));
+  min-height: 1vw;
+  color: $active-text-dark;
+}
+
+.canvas-container {
+  display: flex;
+  height: 95%; 
+  width: 95%;
+  flex: 1;
+  min-height: 130px;
+  margin-left: 2.5%;
+}
+
+.icon-back {
+  align-content: flex-start;
+  background-color: $darkboxcolor;
+  border: 2px dotted $active-text-dark;
+  border-radius: 3vw;
+  padding-bottom: 0.5vh;
+  height: 9vw;
+  width: 9vw;
+}
+
+.location {
+  line-height: 6vh;
+  
+  #owm_city {
+    font-size: calc(1.75rem + ((1vw - 4.68px) * 1.2397));
+  }
+  #owm_cc {
+    font-size: calc(1.25rem + ((1vw - 4.68px) * 0.8264));
+  }
+}
+
+.weather-feel {
+  color: $active-text-dark;
+  line-height: 2vh;
+  font-size: calc(0.85rem + ((1vw - 4.68px) * 0.2755));
+}
+
+.weather-feel #weather_dets {
+  margin-right: 2vw;
+}
+
+#temp_out {
+  font-size: calc(1.75rem + ((1vw - 4.68px) * 2.2039));
+  font-weight: bold;
+}
+
+.o-wrapper {
+  max-width: 100%;
+  margin: 0;
+  overflow: hidden;
+  max-height: 20vh;
+}
+.weather-details {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: center;
+  font-size: calc(0.875rem + ((1vw - 4.68px) * 0.2755));
+  width: 100%;
+}
+.forecast {
+  width: 100%;
+}
+
+.weather-left {
+  text-align: right;
+  margin-right: 2vw;
+}
+
+.weather-right {
+  text-align: left;
+}
+
+// TABLET/DESKTOP PAGE
+@media all and (min-width: 768px) {
+  main {
+    flex-flow: row;
+  }
+  .accordionflex {
+    flex: 3;
+  }
+  .rightbox {
+    padding-top: 15px;
+    padding-left: 0;
+    min-width: 250px;
+  }
+  .leftbox{
+    flex: 3;
+  }
+  .sensordata {
+    max-height: 350px;
+  }
+  .icon-back {
+    padding-top: 1vh;
+  }
+}
+
+@media (min-width: 1920px) {
+  .sp-show {
+    font-size: 64px;
+  }
+}

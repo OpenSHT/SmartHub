@@ -1,0 +1,3 @@
+.git/ .idea/ .vscode/
+/venv/
+/saved_config.ini/

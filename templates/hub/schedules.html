@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+    {% block title %}{{ title }}{% endblock title %}
+    
+    {% block main_content %}
+    <div id="content">
+        <div class="setting-header">Scheduler</div>
+
+        <div class="container">
+            <form id="scheduler" action="#" method="post" onsubmit="sendSetpoints()">
+                <div class="row">
+                    <h3 class="setting-subheader">Setpoints</h3>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <i class="fas fa-house-user"></i>
+                        <label>Home</label>
+                    </div>
+                    <div class="col-75">
+                        <div class="col-wrapper">
+                            <div id="home_spinner" 
+                                class="counter" 
+                                min="15" 
+                                max="30" 
+                                step="0.5">
+                                <div class='counter_btn decrementer'>-</div> 
+                                <input class="number-input" type="number" name="home_temp" id="home_temp"/> 
+                                <div class='counter_btn incrementer'>+</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="row">
+                    <div class="col-25">
+                        <i class="fas fa-house-user"></i>
+                        <label for="home_temp">Home</label>
+                    </div>
+                    <div class="col-75">
+                        <div class="col-wrapper">
+                            <input type="number" id="home_temp" name="home_temp" min="15" max="35" value="22.0" step="0.5">
+                        </div>
+                    </div>
+                </div> -->
+
+                <div class="row">
+                    <div class="col-25">
+                        <i class="fas fa-door-open"></i>
+                        <label for="away_temp">Away</label>
+                    </div>
+                    <div class="col-75">
+                        <div class="col-wrapper">
+                            <div id="away_spinner" 
+                                class="counter" 
+                                min="15" 
+                                max="30" 
+                                step="0.5">
+                                <div class='counter_btn decrementer'>-</div> 
+                                <input class='number-input' type='number' name='away_temp' id="away_temp"/> 
+                                <div class='counter_btn incrementer'>+</div>
+                            </div>
+                            
+                            <!-- <input type="number" id="away_temp" name="away_temp" min="15" max="35" value="18.0" step="0.5"> -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-25">
+                        <i class="fas fa-bed"></i>
+                        <label for="sleep_temp">Sleep</label>
+                    </div>
+                    <div class="col-75">
+                        <div class="col-wrapper">
+                            <div id="sleep_spinner" 
+                                class="counter" 
+                                min="15" 
+                                max="30" 
+                                step="0.5">
+                                <div class="counter_btn decrementer">-</div> 
+                                <input class="number-input" type="number" name="sleep_temp" id="sleep_temp"/> 
+                                <div class='counter_btn incrementer'>+</div>
+                            </div>
+
+                            <!-- <input type="number" id="sleep_temp" name="sleep_temp" min="15" max="35" value="21.0" step="0.5"> -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Slider Bar-->
+                <div class="slider-wrap">
+                    <div class="row">
+                        
+                        <div class="label-row">
+                            <!-- <label for="amount" id="slider-1-label">Sleep and Awake Schedule:</label> -->
+                            <div class="col-50 awake_display">
+                                Awake: 
+                                <input type="text" id="awake-display" name="awake-display" readonly>
+                            </div>
+                            <div class="col-50 sleep_display">
+                                Sleep: 
+                                <input type="text" id="sleep-display" name="sleep-display" readonly>
+                            </div>
+                        </div>
+                        
+                        <div id="time-range-slider" class="ui-slider ui-corner-all ui-slider-horizantal ui-widget ui-widget-content">
+                            <div id="custom-handle-1" class="ui-slider-handle"></div>
+                            <div id="custom-handle-2" class="ui-slider-handle"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- SUBMIT BUTTON -->
+                <div class="row">
+                    <input class="scheduler" type="submit" value="Submit">
+                </div>
+            </form>
+        </div>
+
+    </div>
+    <!-- Schedules.js -->
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/schedules.js') }}" defer></script>
+    {% endblock main_content %}

@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+    {% block title %}{{ title }}{% endblock title %}
+    
+	{% block main_content %}
+
+        <main>
+            <div class="leftbox">
+
+                <span class="sensordata" id="sensordata">
+                    <div class="panel-page">
+                        <span><span class="temp-show stroke-2" id="temp"></span>
+                        <span class="hum-show stroke-2" id="hum"></span></span>
+                    </div>
+                </span>
+                
+                <div class="accordionflex">
+                    <button class="accordion panel1" id="chart-panel">Chart</button>
+                    <div class="panel">
+                        <div class="canvas-container">
+                            <canvas id="chart_canvas"></canvas>
+                        </div>
+                    </div>
+
+                    <button class="accordion panel2" id="control-panel">Controls</button>
+                    <div class="panel" id="btns" style="border-radius: 0 0 5px 5px;">
+                        <div class="button-container" id="button-grp">
+
+                            <!--BUTTON GROUP-->
+                            <button type="button" class="btn btn-huge" id="auto">
+                                <b>
+                                    Auto
+                                </b>
+                            </button>
+                            <button type="button" class="btn btn-huge" id="cool">
+                                <b>
+                                    Cool
+                                </b>
+                            </button>
+                            <button type="button" class="btn btn-huge" id="heat">
+                                <b>
+                                    Heat
+                                </b>
+                            </button>
+                            <button type="button" class="btn btn-huge" id="off">
+                                <b>
+                                    System Off
+                                </b>
+                            </button>
+
+                            <!-- SETPOINT SLIDER -->
+                            <div class="slider-box">
+                                <div id="sp-range-slider" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
+                                    <div id="sp-handle" class="ui-slider-handle"><div class="handle-center"></div></div>
+                                </div>
+                                <!-- <div class="rangeslider">
+                                    <input type="range" id="myRange" min="15" max="30" step="0.5" value="{{ sp }}">
+                                </div> -->
+                            </div>
+                            <div class="sp-show">
+                                <span id="sp_value"></span><span>&#176;</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="rightbox">
+                
+                <div class="weatherdata" id="weatherdata">
+                    <div class="panel-page">
+                        <!-- <hr style="width:90%; margin-left:5%; height:2px; background-color:white;"> -->
+
+                        <div class="icon-back"><img id="weather_icon" src="" alt="" style="width: 8vw; height: 8vw"></div>      
+                        <span class="location">
+                            <span id="owm_city"></span>
+                            <tab1></tab1>
+                            <span id="owm_cc"></span>
+                        </span>
+
+                        <hr style="width:90%; margin-left:5%; height:2px; background-color:white;">
+
+                        <div class="weather-feel">
+                            <span>
+                                <span id="weather_dets"></span><tab1></tab1>
+                                <span>feels: </span>
+                                <span id="temp_feel_out"></span>
+                            </span>
+                        </div>
+
+                        <span id="temp_out"></span>
+
+                        <hr style="width:90%; margin-left:5%; height:2px; background-color:white;">
+                        
+                        <div class="o-wrapper">
+                            <div class="weather-details">
+
+                                <div class="weather-left">
+                                    <div><span>min temp: </span></div>
+                                    <div><span>max temp: </span></div>
+                                    <div><span>humidity: </span></div>
+                                    <div><span>wind speed: </span></div>
+                                    <div><span>pressure: </span></div>
+                                </div>
+                                <div class="weather-right">
+                                    <div><span id="temp_min_out"></span></div>
+                                    <div><span id="temp_max_out"></span></div>
+                                    <div><span id="hum_out"></span></div>
+                                    <div><span id="wind_spd"></span></div>
+                                    <div><span id="pressure_out"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                                        
+                    </div>
+                </div>
+            </div>
+        </main>
+    <!-- THERMOSTAT JS () -->
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/thermostat.js') }}" defer></script>
+    <!-- WEATHER JS () -->
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/weather.js') }}" defer></script>
+    <!-- TempSlider JS -->
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/tempsliders.js') }}" defer></script>
+    <!-- Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" defer></script>
+    <!-- accordion -->
+    <script type="text/javascript" src="./static/js/accordion.js" defer></script>
+    <!-- TimelineLite.min.js -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.17.0/TimelineLite.min.js" defer></script>
+    {% endblock main_content %}

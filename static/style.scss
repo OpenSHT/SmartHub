@@ -1,0 +1,44 @@
+@import "./scss/variables";
+@import "./scss/header1";  // Different Styles coming soon with header2, ...
+@import "./scss/body";
+@import "./scss/settings";
+@import "./scss/schedules";
+
+/* Basic styling */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: 'Poppins', serif;
+  background-image: url("./images/back2.jpg");
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  // background-size: cover; /* Resize the background image to cover the entire container */
+  // background-blend-mode: screen;
+}
+
+section {
+  display: flex;
+  flex-flow: column;
+  height: 100vh;
+}
+
+a {
+  color: $inactive-text-dark;
+  text-decoration: none;
+  font-family: 'Poppins', serif;
+}
+
+a:hover {
+  color: $active-text-dark;
+  text-shadow: 1px 1px 2px #aaa;
+}
+
+.button-column {
+  display: flex;
+  flex-flow: column;
+  height: 100vh;
+}

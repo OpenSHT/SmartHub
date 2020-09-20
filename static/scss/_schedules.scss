@@ -1,0 +1,228 @@
+@import "./variables";
+
+input[type=number] {
+    width: 20vw;
+    min-width: 75px;
+    padding: 12px;
+    border: 2px solid $primary-dark;
+    box-sizing: border-box;
+    resize: vertical;
+    float: left;
+    font-size: 1.2em;
+    text-align: center;
+    pointer-events: none;
+}
+  
+span.spinner {
+    position: absolute;
+    // height: 40px;
+    user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+  
+span.spinner > .sub,
+span.spinner > .add {
+    float: left;
+    display: block;
+    padding: 12px;
+    border: 2px solid $primary-dark;
+    box-sizing: border-box;
+    resize: vertical;
+    height: 50px;
+    text-align: center;
+    // font-weight: 700;
+    font-size: 1.2em;
+    background: white;
+    color: black;
+    border-right: 0;
+    border-radius: 5px 0 0 5px;
+    cursor: pointer;
+    transition: 0.1s linear;
+    -o-transition: 0.1s linear;
+    -ms-transition: 0.1s linear;
+    -moz-transition: 0.1s linear;
+    -webkit-transition: 0.1s linear;
+}
+  
+span.spinner > .add {
+    top: 0;
+    border-left: 0;
+    border-radius: 0 5px 5px 0;
+}
+  
+span.spinner > .sub:hover {
+    background: #00C6E1;
+    color: white;
+}
+span.spinner > .add:hover {
+    background: #E91E63;
+    color: white;
+}
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
+   -webkit-appearance: none;
+}
+
+.col-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    flex-wrap: nowrap;
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+}
+
+// SLIDERBAR
+.slider-wrap {
+    margin: 45px 0px 15px;
+}
+.label-row {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 35px;
+}
+.col-50 {
+    display: block;
+    width: 50%;
+    float: center;
+    text-align: center;
+}
+.awake_display, .sleep_display {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: calc(1.25rem + ((1vw - 4.68px) * 0.8264));
+    color: white; 
+}
+#awake-display, #sleep-display {
+    margin: 0;
+    font-family: 'DSEG14 Classic-Bold Italic';
+    font-size: calc(1.25rem + ((1vw - 4.68px) * 0.8264));
+    text-align: center;
+    background: $darkboxcolor; 
+    flex: 1;
+    border:2px solid whitesmoke;
+    border-radius: 5px; 
+    color: white; 
+    font-weight: bold; 
+    cursor: none;
+}
+.awake_display { 
+    margin-right: 15px;
+}
+
+
+#custom-handle-1 {
+    background: transparent url(./images/s2_night_day.svg) no-repeat center center; 
+}
+#custom-handle-2 {
+    background: transparent url(./images/s2_day_night.svg) no-repeat center center;
+}
+#custom-handle-1, 
+#custom-handle-2 {
+    margin: 0;
+    padding: 0;
+    width: calc(6rem + ((1vw - 7.68px) * 2.7778));
+    height: calc(3rem + ((1vw - 7.68px) * 1.3889));
+    border: none;
+    background-size: calc(5.875rem + ((1vw - 7.68px) * 2.7778)) calc(2.875rem + ((1vw - 7.68px) * 1.3889));
+    background-position: center;
+    transform: translate(-50%, -20%);    
+}
+#time-range-slider {
+    height: calc(1.25rem + ((1vw - 7.68px) * 1.7361));
+    margin: 0px 50px;
+    border-radius: calc((1.25rem + ((1vw - 7.68px) * 1.7361)) / 2);
+    background: $secondary-accent-theme;
+}
+#time-range-slider .ui-slider-range { 
+    background: $primary-accent-theme; 
+}
+#slider-1-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: calc(1.25rem + ((1vw - 4.68px) * 0.8264));
+    text-align: center;
+}
+
+// NEW NUMBER SPINNER
+.number-input {
+    display: block;
+    background: $darkboxcolor;
+    border: 2px solid white !important;
+    color:whitesmoke;
+    text-align:center;
+    width:20vw;
+    height: 40px;
+    font-size:1.2em;
+    line-height:normal;
+    padding:0;
+    outline:none;
+}
+.counter {
+    display: flex;
+    margin-bottom: 20px;
+}
+.counter_btn {
+    display: inline-block;
+    border: 2px solid white;
+    color: whitesmoke;
+    text-align: center;
+    line-height: 2.5;
+    // vertical-align: middle;
+    // text-justify: center;
+    // padding-top: 2px;
+    width: 50px;
+    height: 40px;
+}
+.incrementer {
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+    background: $hum-color;
+    user-select: none;
+}
+.incrementer:hover {
+    color: $hum-color;
+    background: whitesmoke;
+}
+.decrementer {
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    background: $temp-color;
+    user-select: none;
+}
+.decrementer:hover {
+    color: $temp-color;
+    background: whitesmoke
+}
+// input[type=number]::-webkit-inner-spin-button {
+//     -webkit-appearance: none;
+//     -moz-appearance: none;
+//     appearance: none;
+//     margin: 0;
+// }
+
+@media screen and (max-width: 600px) {
+    #scheduler .col-25 {
+      width: 100%;
+      text-align: center;
+    //   margin: 40px 0px -20px 0px;
+    }
+
+    .col-25 {
+        margin-top: 0px;
+    }
+
+    .label-row {
+        flex-wrap: wrap;
+    }
+    .col-50 {
+        width: 100%;
+    }
+    input[type=submit].scheduler {
+        margin-top: 30px;
+        width: 100%;
+    }
+}
