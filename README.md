@@ -130,17 +130,11 @@
 
 #### /thermostat
 
-![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/thermostat_page1.png?raw=true)
+![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/thermostat_page1.png?raw=true) ![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/thermostat_page2.png?raw=true)
 
-![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/thermostat_page2.png?raw=true)
+#### /schedules  #### /settings
 
-#### /schedules
-
-![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/schedules.png?raw=true)
-
-#### /settings
-
-![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/settings_color.png?raw=true)
+![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/schedules.png?raw=true) ![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/settings_color.png?raw=true)
 
 ![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/settings_image.png?raw=true)
 
