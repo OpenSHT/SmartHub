@@ -127,16 +127,15 @@
 </ul>
 
 ## Screenshots
+#### /thermostat
 
-<img align="left" src="./resources/thermostat_page1.png" width="45%" alt="Control panel" title="Thermostat Control" hspace="20"/> <img align="left" src="./resources/thermostat_page2.png" width="45%" alt="Control panel" title="Thermostat Control" hspace="20"/>
-<br/>
+<img align="left" src="./resources/thermostat_page1.png" width="45%" alt="Control panel" title="Thermostat Control" hspace="20"/> <img align="left" src="./resources/thermostat_page2.png" width="45%" alt="Control panel" title="Thermostat Control"/>
+<br/><br/>
 
-#### /thermostat             |  chart
-:-------------------------:|:-------------------------:
-![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/thermostat_page1.png?raw=true) | ![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/thermostat_page2.png?raw=true)
+#### /schedules  ...  /settings
+<img align="left" src="./resources/schedules.png" width="45%" alt="Control panel" title="Thermostat Control" hspace="20"/> <img align="left" src="./resources/settings_color.png" width="45%" alt="Control panel" title="Thermostat Control"/>
+<br/><br/>
+<img align="left" src="./resources/settings_image.png" width="45%" alt="Control panel" title="Thermostat Control" hspace="20"/> <img align="left" src="./resources/settings_tileimage.png" width="45%" alt="Control panel" title="Thermostat Control"/>
+<br/><br/>
 
-#### /schedules  |  #### /settings
-:-------------------------:|:-------------------------:
-![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/schedules.png?raw=true) | ![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/settings_color.png?raw=true)
-![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/settings_image.png?raw=true) | ![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/settings_tileimage.png?raw=true)
 
