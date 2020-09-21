@@ -133,6 +133,10 @@
 
 ![alt text](https://github.com/OpenSHT/SmartHub/blob/master/screenshots/thermostat_page2.png?raw=true)
 
+#### /schedules
+
+![alt text](https://github.com/OpenSHT/SmartHub/blob/master/screenshots/schedules.png?raw=true)
+
 #### /settings
 
 ![alt text](https://github.com/OpenSHT/SmartHub/blob/master/screenshots/settings_color.png?raw=true)
