@@ -9,9 +9,10 @@
 ![GitHub stars](https://img.shields.io/github/stars/OpenSHT/SmartHub?style=social)
 ![GitHub contributors](https://img.shields.io/github/contributors/OpenSHT/SmartHub)
 
-This project aims to fill a gap in the market of smart home thermostats for Do-It-Yourselfers; those looking to build their own projects without having to tackle the learning curve of larger ecosystems (OpenHAB, SmartThings, etc).
+<h6>This project aims to fill a gap in the market of smart home thermostats for Do-It-Yourselfers; those looking to build their own projects without having to tackle the learning curve of larger ecosystems (OpenHAB, SmartThings, etc).</h6>
 
-The end goal is to provide greater extensibility than modern competitors (EcoBee, Nest, etc) in terms of extra sensors and custom settings on your homes temperature control. Currently the system supports:
+<p>The end goal is to provide greater extensibility than modern competitors (EcoBee, Nest, etc) in terms of extra sensors and custom settings on your homes temperature control. Currently the system supports:</p>
+
 <ul>
 	<li>up to x20 BLE temperature/humidity/motion sensors (Indoor/Outdoor)</li>
 	<li>App settings for home, awake, and away temperature setpoints</li>
