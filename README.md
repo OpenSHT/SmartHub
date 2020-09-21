@@ -32,6 +32,7 @@
 ## RoadMap
 #### Current Features:
 <ul>
+    <li>Responsive and <b>mobile friendly</b> Web APP that can set a centered background image, tiled image, or a custom color</li>
     <li>Thermostat support for modern HVAC systems that <u><b>DO NOT</b></u> have a compressor</li>
     <li>Seperate thermostat settings for Home Awake, and Away</li>
     <li><a href="https://openweathermap.org/">OpenWeatherMap</a> API integration</li>
