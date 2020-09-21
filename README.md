@@ -128,6 +128,10 @@
 
 ## Screenshots
 
+<img align="left" src="./resources/thermostat_page1.png" alt="Control panel" title="Thermostat Control" hspace="20"/>
+<img align="left" src="./resources/thermostat_page2.png" alt="Control panel" title="Thermostat Control" hspace="20"/>
+<br/>
+
 #### /thermostat             |  chart
 :-------------------------:|:-------------------------:
 ![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/thermostat_page1.png?raw=true) | ![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/thermostat_page2.png?raw=true)
