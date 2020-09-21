@@ -191,6 +191,8 @@ $(document).ready(function () {
                     backgroundColor: 'rgb(255, 99, 132)',
                     borderColor: 'rgb(233, 30, 99)',
                     fontColor: 'rgb(255, 99, 132)',
+                    borderWidth: 4,
+                    fontSize: 16,
                     data: [],
                     fill: false,
                 },
@@ -200,6 +202,8 @@ $(document).ready(function () {
                     backgroundColor: 'rgb(0, 200, 225)',
                     borderColor: 'rgb(15, 135, 150)',
                     fontColor: 'rgb(0, 200, 225)',
+                    borderWidth: 4,
+                    fontSize: 16,
                     data: [],
                     fill: false,
                 }
@@ -239,6 +243,7 @@ $(document).ready(function () {
                     scaleLabel: {
                         display: false,
                         fontColor : "#fff",
+                        fontSize: 16,
                         labelString: 'Time'
                     }
                 }],
@@ -259,6 +264,7 @@ $(document).ready(function () {
                     scaleLabel: {
                         display: false,
                         fontColor : "#fff",
+                        fontSize: 16,
                         labelString: 'Temperature'
                     }}, {
                     id: 'B',
@@ -271,6 +277,7 @@ $(document).ready(function () {
                     scaleLabel: {
                         display: false,
                         fontColor : "#fff",
+                        fontSize: 16,
                         labelString: 'Humidity'
                     }
                 }]
@@ -280,6 +287,7 @@ $(document).ready(function () {
 
     const context = document.getElementById('chart_canvas').getContext('2d');
 
+    Chart.defaults.global.defaultFontSize = 16;
     const lineChart = new Chart(context, config);
 
     const source = new EventSource("/_update_chart");

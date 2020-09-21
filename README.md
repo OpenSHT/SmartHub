@@ -133,6 +133,11 @@
 
 ![alt text](https://github.com/OpenSHT/SmartHub/blob/master/screenshots/thermostat_page2.png?raw=true)
 
-![alt text](https://github.com/OpenSHT/SmartHub/blob/master/screenshots/settings_page1.png?raw=true)
+#### /settings
 
-![alt text](https://github.com/OpenSHT/SmartHub/blob/master/screenshots/settings_page2.png?raw=true)
+![alt text](https://github.com/OpenSHT/SmartHub/blob/master/screenshots/settings_color.png?raw=true)
+
+![alt text](https://github.com/OpenSHT/SmartHub/blob/master/screenshots/settings_image.png?raw=true)
+
+![alt text](https://github.com/OpenSHT/SmartHub/blob/master/screenshots/settings_tileimage.png?raw=true)
+
