@@ -1,4 +1,4 @@
-![alt text](https://github.com/OpenSHT/SmartHub/blob/master/static/images/header_tall.png?raw=true)
+![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/header_tall.png?raw=true)
 
 [OpenSHT.tech](https://opensht.tech/)
 ![GitHub](https://img.shields.io/github/license/OpenSHT/SmartHub?color=blue)
@@ -9,7 +9,16 @@
 ![GitHub stars](https://img.shields.io/github/stars/OpenSHT/SmartHub?style=social)
 ![GitHub contributors](https://img.shields.io/github/contributors/OpenSHT/SmartHub)
 
-A bit audacious to call this a smart home hub just yet, however... dream big I guess.
+This project aims to fill a gap in the market of smart home thermostats for Do-It-Yourselfers; those looking to build their own projects without having to tackle the learning curve of larger ecosystems (OpenHAB, SmartThings, etc).
+
+The end goal is to provide greater extensibility than modern competitors (EcoBee, Nest, etc) in terms of extra sensors and custom settings on your homes temperature control. Currently the system supports:
+<ul>
+	<li>up to x20 BLE temperature/humidity/motion sensors (Indoor/Outdoor)</li>
+	<li>App settings for home, awake, and away temperature setpoints</li>
+	<li>Intelligent operation by correlating with outdoor temperature (OpenWeatherMap/Sensors)</li>
+</ul>
+
+
 ## Table of Contents
 
 * [RoadMap](https://github.com/OpenSHT/SmartHub#roadmap)
@@ -23,9 +32,9 @@ A bit audacious to call this a smart home hub just yet, however... dream big I g
 #### Current Features:
 <ul>
     <li>Thermostat support for modern HVAC systems that <u><b>DO NOT</b></u> have a compressor</li>
+    <li>Seperate thermostat settings for Home Awake, and Away</li>
     <li><a href="https://openweathermap.org/">OpenWeatherMap</a> API integration</li>
-    <li>ESP32 NodeMCU as a Serial slave feeding local and remote sensor data
-        <ul>saves opening a thread to listen to a half dozen wifi devices chucking information at it</ul></li>
+    <li>ESP32 NodeMCU External sensors feeding local and remote sensor data</li>
     <li>Support for the <b>DHT 11 / 22 / 21</b> on a GPIO connection</li>
     <li>Support for any micro-controller streaming the data as (hum,temp):</li>
     
@@ -35,23 +44,27 @@ A bit audacious to call this a smart home hub just yet, however... dream big I g
 
 #### Future Hub Integrations:
 <ul>
-    <li>Philips Hue lighting integration (just havent gotten around to it)
-        <ul><a href="https://github.com/studioimaginaire/phue">phue</a></ul></li>
-    <li>Wiz Smart Lighting (No good API available so may lack features)</li>
-    <li>Garden monitoring & automation</li>
+    <li>Alexa API</li>
+    <li>Google SmartHome</li>
+    <li>IFTTT</li>
+    <li>OpenHab</li>
+    <li>SmartThings</li>
     <li>IOT Security Cameras (PiZero or other)</li>
+    <li>Possibly other sensors that are on the market</li>	
 </ul>
 
 #### Features in need of <u><b>YOU!</b></u>, the open source community
 <ul>
-    <li>Additional smart home product I do not own such as:
+    <li>Additional Thermostat configurations, such as:
         <ul>
-            <li>Wyze Bulb, Lifx, TP-Link Bulbs, Sengled, ...</li>
-            <li>ZigBee</li>
-            <li>Z-Wave</li>
-            <li>Alexa/Google Home?</li>
+            <li>Compressor system</li>
+            <li>Boiler system</li>
+            <li>No common (White wire usually)</li>
+            <li>Heat pump system</li>
+	    <li>Humidifier/Dehumidifier?</li>
         </ul>
     </li>
+	<li> Any of the aforementioned Integrations will be quite the project</li>
 </ul>
 
 ## Raspberry Pi Setup:
@@ -59,7 +72,7 @@ A bit audacious to call this a smart home hub just yet, however... dream big I g
 #### (Tested on RPI 3B+, 3)
 1. Write the iso using 'dd':
 	
-		sudo dd bs=4M if=2020-05-27-raspios-buster-armhf.img of=/dev/sdb conv=fdatasync status="progress"
+		sudo dd bs=4M if=YYYY-MM-DD-raspios-buster-armhf.img of=/dev/sdb conv=fdatasync status="progress"
 	
 2. If using the HDMI&USB Connected TFT Touchscreens 'made' for RPi:
    
@@ -98,27 +111,27 @@ A bit audacious to call this a smart home hub just yet, however... dream big I g
         
 ## Technologies
 <ul>
-    <li><a href="https://getbootstrap.com/">Bootstrap v4.5.2</a></li>
-    <li><a href="https://hostingcrown.com/jquery-cdn">jQuery v3.4.0</a></li>
-    <li><a href="https://www.chartjs.org/">Chart.js v2.93</a></li>
-    <li><a href="https://rangeslider.js.org/">Rangeslider.js v2.3.0</a></li>
+	<li>Vanilla JS, CSS3, HTML5</li>
+    	<li><a href="https://jquery.com/download/">jQuery v3.5.1</a></li>
+	<li><a href="https://jqueryui.com/download/">jQuery-UI v1.12.1</a></li>
+    	<li><a href="https://www.chartjs.org/">Chart.js v2.93</a></li>
 </ul>
 
 ## Requirements:
 <ul>
-    <li>Flask>=1.1.2</li>
-    <li>pyserial>=3.4</li>
-    <li>Flask-APScheduler>=1.11.0</li>
+	<li>Flask>=1.1.2</li>
+    	<li>Flask-APScheduler>=1.11.0</li>
+	<li>pyserial>=3.4</li>
 </ul>
 
 ## Screenshots
 
 #### /thermostat
 
-![alt text](https://github.com/OpenSHT/SmartHub/blob/master/screenshots/thermostat_page_tab_1.png?raw=true)
+![alt text](https://github.com/OpenSHT/SmartHub/blob/master/screenshots/thermostat_page1.png?raw=true)
 
-![alt text](https://github.com/OpenSHT/SmartHub/blob/master/screenshots/thermostat_page_tab_2.png?raw=true)
+![alt text](https://github.com/OpenSHT/SmartHub/blob/master/screenshots/thermostat_page2.png?raw=true)
 
-![alt text](https://github.com/OpenSHT/SmartHub/blob/master/screenshots/settings_page_1.png?raw=true)
+![alt text](https://github.com/OpenSHT/SmartHub/blob/master/screenshots/settings_page1.png?raw=true)
 
-![alt text](https://github.com/OpenSHT/SmartHub/blob/master/screenshots/settings_page_2.png?raw=true)
+![alt text](https://github.com/OpenSHT/SmartHub/blob/master/screenshots/settings_page2.png?raw=true)
