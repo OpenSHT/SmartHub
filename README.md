@@ -1,6 +1,5 @@
-![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/header_tall.png?raw=true)
+[![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/header_tall.png?raw=true)](https://opensht.tech/)
 
-[![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/logo_light.png?raw=true)](https://opensht.tech/)
 ![GitHub](https://img.shields.io/github/license/OpenSHT/SmartHub?color=blue)
 ![GitHub issues](https://img.shields.io/github/issues/OpenSHT/SmartHub)
 ![GitHub top language](https://img.shields.io/github/languages/top/OpenSHT/SmartHub)
