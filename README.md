@@ -129,22 +129,22 @@
 
 ## Mobile Screenshots
 
-<img align="left" src="./resources/mobile_thermostat_page1.jpg" width="27%" alt="Control panel" title="Thermostat Control" hspace="15"/> <img align="left" src="./resources/mobile_thermostat_page2.jpg" width="27%" alt="Control panel" title="Thermostat Control" hspace="15"/> <img align="left" src="./resources/mobile_menu.jpg" width="27%" alt="Mobile Navbar" title="Mobile Menu" hspace="15"/>
+<img align="left" src="./resources/mobile_thermostat_page1.jpg" width="27%" alt="Control panel" title="Thermostat Control" hspace="15" vspace="15"/> <img align="left" src="./resources/mobile_thermostat_page2.jpg" width="27%" alt="Control panel" title="Thermostat Control" hspace="15" vspace="15"/> <img align="left" src="./resources/mobile_menu.jpg" width="27%" alt="Mobile Navbar" title="Mobile Menu" hspace="15" vspace="15"/>
 <br/><br/><br/>
 
-<img align="left" src="./resources/mobile_schedules1.jpg" width="27%" alt="Control panel" title="Thermostat Control" hspace="15"/> <img align="left" src="./resources/mobile_schedules2.jpg" width="27%" alt="Control panel" title="Thermostat Control" hspace="15"/> <img align="left" src="./resources/mobile_settings.jpg" width="27%" alt="Mobile Navbar" title="Mobile Menu" hspace="15"/>
+<img align="left" src="./resources/mobile_schedules1.jpg" width="27%" alt="Control panel" title="Thermostat Control" hspace="15" vspace="15"/> <img align="left" src="./resources/mobile_schedules2.jpg" width="27%" alt="Control panel" title="Thermostat Control" hspace="15" vspace="15"/> <img align="left" src="./resources/mobile_settings.jpg" width="27%" alt="Mobile Navbar" title="Mobile Menu" hspace="15" vspace="15"/>
 <br/><br/><br/>
 
 ## Desktop Screenshots
 #### /thermostat
 
-<img align="left" src="./resources/thermostat_page1.png" width="45%" alt="Control panel" title="Thermostat Control" hspace="20"/> <img align="left" src="./resources/thermostat_page2.png" width="45%" alt="Control panel" title="Thermostat Control"/>
+<img align="left" src="./resources/thermostat_page1.png" width="45%" alt="Control panel" title="Thermostat Control" hspace="20" vspace="15"/> <img align="left" src="./resources/thermostat_page2.png" width="45%" alt="Control panel" title="Thermostat Control" vspace="15"/>
 <br/><br/>
 
 #### /schedules  ...  /settings
-<img align="left" src="./resources/schedules.png" width="45%" alt="Scheduler" title="Schedules Page" hspace="20"/> <img align="left" src="./resources/settings_color.png" width="45%" alt="Solid color background" title="Settings"/>
+<img align="left" src="./resources/schedules.png" width="45%" alt="Scheduler" title="Schedules Page" hspace="20" vspace="15"/> <img align="left" src="./resources/settings_color.png" width="45%" alt="Solid color background" title="Settings" vspace="15"/>
 <br/><br/>
-<img align="left" src="./resources/settings_image.png" width="45%" alt="Centered image" title="Settings" hspace="20"/> <img align="left" src="./resources/settings_tileimage.png" width="45%" alt="Tiled image" title="Settings"/>
+<img align="left" src="./resources/settings_image.png" width="45%" alt="Centered image" title="Settings" hspace="20" vspace="15"/> <img align="left" src="./resources/settings_tileimage.png" width="45%" alt="Tiled image" title="Settings" vspace="15"/>
 <br/><br/>
 
 
