@@ -27,7 +27,8 @@
 * [Troubleshooting](https://github.com/OpenSHT/SmartHub#troubleshooting)
 * [Technologies](https://github.com/OpenSHT/SmartHub#technologies)
 * [Requirements](https://github.com/OpenSHT/SmartHub#requirements)
-* [Screenshots](https://github.com/OpenSHT/SmartHub#screenshots)
+* [Mobile Screenshots](https://github.com/OpenSHT/SmartHub#mobile-screenshots)
+* [Desktop Screenshots](https://github.com/OpenSHT/SmartHub#screenshots)
 
 ## RoadMap
 #### Current Features:
@@ -126,16 +127,21 @@
 	<li>pyserial>=3.4</li>
 </ul>
 
-## Screenshots
+## Mobile Screenshots
+
+<img align="left" src="./resources/mobile_thermostat_page1.jpg" width="30%" alt="Control panel" title="Thermostat Control" hspace="20"/> <img align="left" src="./resources/mobile_thermostat_page2.jpg" width="30%" alt="Control panel" title="Thermostat Control"/> <img align="left" src="./resources/mobile_menu.jpg" width="30%" alt="Mobile Navbar" title="Mobile Menu"/>
+<br/><br/>
+
+## Desktop Screenshots
 #### /thermostat
 
 <img align="left" src="./resources/thermostat_page1.png" width="45%" alt="Control panel" title="Thermostat Control" hspace="20"/> <img align="left" src="./resources/thermostat_page2.png" width="45%" alt="Control panel" title="Thermostat Control"/>
 <br/><br/>
 
 #### /schedules  ...  /settings
-<img align="left" src="./resources/schedules.png" width="45%" alt="Control panel" title="Thermostat Control" hspace="20"/> <img align="left" src="./resources/settings_color.png" width="45%" alt="Control panel" title="Thermostat Control"/>
+<img align="left" src="./resources/schedules.png" width="45%" alt="Scheduler" title="Schedules Page" hspace="20"/> <img align="left" src="./resources/settings_color.png" width="45%" alt="Solid color background" title="Settings"/>
 <br/><br/>
-<img align="left" src="./resources/settings_image.png" width="45%" alt="Control panel" title="Thermostat Control" hspace="20"/> <img align="left" src="./resources/settings_tileimage.png" width="45%" alt="Control panel" title="Thermostat Control"/>
+<img align="left" src="./resources/settings_image.png" width="45%" alt="Centered image" title="Settings" hspace="20"/> <img align="left" src="./resources/settings_tileimage.png" width="45%" alt="Tiled image" title="Settings"/>
 <br/><br/>
 
 
