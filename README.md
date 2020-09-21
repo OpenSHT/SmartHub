@@ -128,7 +128,7 @@
 
 ## Screenshots
 
-<img align="left" src="./resources/thermostat_page1.png" width="50%" alt="Control panel" title="Thermostat Control" hspace="20"/> <img align="left" src="./resources/thermostat_page2.png" width="50%" alt="Control panel" title="Thermostat Control" hspace="20"/>
+<img align="left" src="./resources/thermostat_page1.png" width="45%" alt="Control panel" title="Thermostat Control" hspace="20"/> <img align="left" src="./resources/thermostat_page2.png" width="45%" alt="Control panel" title="Thermostat Control" hspace="20"/>
 <br/>
 
 #### /thermostat             |  chart
