@@ -129,7 +129,7 @@
 
 ## Mobile Screenshots
 
-<img align="left" src="./resources/mobile_thermostat_page1.jpg" width="30%" alt="Control panel" title="Thermostat Control" hspace="20"/> <img align="left" src="./resources/mobile_thermostat_page2.jpg" width="30%" alt="Control panel" title="Thermostat Control"/> <img align="left" src="./resources/mobile_menu.jpg" width="30%" alt="Mobile Navbar" title="Mobile Menu"/>
+<img align="left" src="./resources/mobile_thermostat_page1.jpg" width="25%" alt="Control panel" title="Thermostat Control" hspace="15"/> <img align="left" src="./resources/mobile_thermostat_page2.jpg" width="25%" alt="Control panel" title="Thermostat Control" hspace="15"/> <img align="left" src="./resources/mobile_menu.jpg" width="25%" alt="Mobile Navbar" title="Mobile Menu" hspace="15"/>
 <br/><br/>
 
 ## Desktop Screenshots
