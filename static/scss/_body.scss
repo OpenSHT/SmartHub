@@ -49,6 +49,23 @@ main {
 .sensordata {
   min-height: 80px;
   max-height: 100px;
+  font-size: calc(3.75rem + ((1vw - 7.68px) * 5.2083));
+}
+.temp-show {
+  // padding-right: 8vw;
+  text-align: left;
+  color:#E91E63;
+  font-family: "Orbitron", sans-serif;
+  font-weight: bolder;
+  -webkit-text-stroke: 0px solid white;
+}
+
+.hum-show {
+  text-align: right;
+  color:#00C6E1;
+  font-family: "Orbitron", sans-serif;
+  font-weight: bolder;
+  -webkit-text-stroke: 0px solid white;
 }
 
 .accordionflex {
@@ -270,6 +287,13 @@ main {
   }
   .sensordata {
     max-height: 350px;
+  }
+  .temp-show {
+    -webkit-text-stroke: 2px $active-text-dark;
+  }
+  
+  .hum-show {
+    -webkit-text-stroke: 2px $active-text-dark;
   }
   .icon-back {
     padding-top: 1vh;

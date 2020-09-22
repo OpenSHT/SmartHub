@@ -1,4 +1,4 @@
-[![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/header_tall.png?raw=true)](https://opensht.tech/)
+[![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/header.png?raw=true)](https://opensht.tech/)
 
 ![GitHub](https://img.shields.io/github/license/OpenSHT/SmartHub?color=blue)
 ![GitHub issues](https://img.shields.io/github/issues/OpenSHT/SmartHub)
