@@ -1,13 +1,16 @@
 from flask import Flask, render_template, Response, jsonify, request, redirect, url_for
 from time import sleep
 from datetime import datetime
-from threading import Thread
+from threading import Thread, Event
+from multiprocessing import Process
 import json
 from configparser import ConfigParser
 # My Modules("/modules"):
 from modules.thermostat import Sensors, HvacControl
 from modules.extras import Colors
 from modules.weather import Weather
+from modules.minigui import mini_gui
+from queue import Queue
 
 app = Flask(__name__)
 
@@ -18,7 +21,7 @@ config = ConfigParser()
 config.read('saved_config.ini')
 
 setpoints = config.get('HVAC', 'setpoints').strip(' []').split(',')
-HOME_SETPOINT = float(setpoints[0])  # float(config.get('HVAC', 'setpoint'))
+HOME_SETPOINT = float(setpoints[0])  
 AWAY_SETPOINT = float(setpoints[1])
 SLEEP_SETPOINT = float(setpoints[2])
 
@@ -37,6 +40,7 @@ INTERFACE_THEME = str(config.get('APP', 'interface-color'))
 INTERFACE_UNITS = str(config.get('WEATHER', 'units'))
 WEATHER_LOCATION = ""
 RESULT_LIST = []
+MINI_GUI = bool(config.get('APP', 'mini-gui'))
 # <========================> #
 
 """ **** SETUP YOUR SENSOR!!!! ****:
@@ -98,6 +102,9 @@ hvac_cls.mode_change(mode)
 
 weather_cls = Weather(OWM_API_KEY)
 
+# Shared data Queues for MiniGUI
+sensor_data = Queue()
+
 temp = 0.0
 hum = 0.0
 sensors_on = False  # to control loop in thread
@@ -107,18 +114,24 @@ hvac_on = False
 
 global_action = 'on'
 
+exit_event = Event()
+exit_event.clear()
 
 def _hvac_control():
     """THREAD: Runs every 10 minutes (600 sec)
             :returns temp, hum
     """
-    global sensors_on, temp, hum, mode, hvac_loop, hvac_cls, HOME_SETPOINT
+    global sensors_on, temp, hum, mode, hvac_loop, hvac_cls, HOME_SETPOINT, exit_event
 
     sleep(2)
-    print(f"{p.START} Start of HVAC-Thread \n     [MODE]: {mode} \n     [SETPOINT]: {HOME_SETPOINT} {p.ENDC} \n")
+    print(f"{p.START} Start of HVAC-Thread {p.ENDC} \n")
     
     while hvac_on:
         hvac_cls.relay_control(temp, hum, mode)
+
+        if exit_event.is_set():
+            break
+
         sleep(hvac_loop)
     
     print(f"{p.WARN} Stopping HVAC-Thread {p.ENDC} \n")
@@ -128,7 +141,7 @@ def _check_sensors():
     """THREAD: Runs every 1 second
         :returns temp, hum
     """
-    global sensors_on, hvac_on, global_action, temp, hum, time_now, sensor_cls, hvac_cls, HOME_SETPOINT, SENSOR_DELAY
+    global sensors_on, hvac_on, global_action, temp, hum, time_now, sensor_cls, hvac_cls, HOME_SETPOINT, SENSOR_DELAY, exit_event
 
     print(f"{p.START} Start of Sensor-Thread {p.ENDC} \n")
     count = 0
@@ -152,56 +165,12 @@ def _check_sensors():
             count = 0
             hvac_cls.relay_control(temp, hum, mode)
 
+        if exit_event.is_set():
+            break
+
         sleep(SENSOR_DELAY)
 
     print(f"{p.WARN} Stopping Sensor-Thread {p.ENDC} \n")
-
-
-# @app.route("/")
-# @app.route("/home")
-# def home():
-#     """HOME PAGE
-#     """
-#     global global_action, sensors_on, hvac_on, mode
-
-#     if global_action == 'on':
-#         if not sensors_on:
-#             sensors_on = True
-#             Thread(target=_check_sensors).start()  # Loops every 1 second (Sensor, Chart & Clock update)
-#         else:
-#             print(f"{p.WARN} Sensors already running {p.ENDC} \n")
-
-#         if not hvac_on:
-#             hvac_on = True
-#             Thread(target=_hvac_control).start()  # Loops every 10 minutes (Relay Control)
-#         else:
-#             print(f"{p.WARN} HVAC already running {p.ENDC} \n")
-
-#     elif global_action == 'hvac_off':
-#         if hvac_on:
-#             hvac_on = False  # it should stop thread
-#             mode = 'off'
-#             print(f"{p.MSGS} HVAC is now off {p.ENDC} \n")
-#         else:
-#             print(f"{p.WARN} [WARNING] HVAC not running {p.ENDC} \n")
-#         if not sensors_on:
-#             sensors_on = True
-#             Thread(target=_check_sensors).start()  # Loops every 1 second (Sensor, Chart & Clock update)
-#         else:
-#             print(f"{p.WARN} Sensors already running {p.ENDC} \n")
-
-#     elif global_action == 'sensors_off':
-#         if hvac_on:
-#             hvac_on = False  # it should stop thread
-#             mode = 'off'
-#             print(f"{p.MSGS} HVAC is now off {p.ENDC} \n")
-#         if sensors_on:
-#             sensors_on = False  # it should stop thread
-#             print(f"{p.MSGS} Sensors are now off {p.ENDC} \n")
-#         else:
-#             print(f"{p.WARN} [WARNING] Sensors not running {p.ENDC} \n")
-
-#     return render_template('hub/home.html', title=" - Home")
 
 
 @app.route("/")
@@ -210,49 +179,9 @@ def _check_sensors():
 def thermostat(action='on'):
     """THERMOSTAT PAGE
     """
-    global sensors_on, hvac_on, temp, hum, time_now, global_action, mode, HOME_SETPOINT, LOCATION, weather_cls
+    global global_action  #, sensors_on, hvac_on, temp, hum, time_now, mode, HOME_SETPOINT, LOCATION, weather_cls
 
     global_action = f"{action}"
-
-    if mode == "off":
-        global_action = "hvac_off"
-
-    if global_action == 'on':
-        if not sensors_on:
-            sensors_on = True
-            Thread(target=_check_sensors).start()  # Loops every 1 second (Sensor, Chart & Clock update)
-        else:
-            print(f"{p.WARN} Sensors already running {p.ENDC} \n")
-
-        if not hvac_on:
-            hvac_on = True
-            Thread(target=_hvac_control).start()  # Loops every 10 minutes (Relay Control)
-        else:
-            print(f"{p.WARN} HVAC already running {p.ENDC} \n")
-
-    elif global_action == 'hvac_off':
-        if hvac_on:
-            hvac_on = False  # it should stop thread
-            mode = 'off'
-            print(f"{p.MSGS} HVAC is now off {p.ENDC} \n")
-        else:
-            print(f"{p.WARN} [WARNING] HVAC not running {p.ENDC} \n")
-        if not sensors_on:
-            sensors_on = True
-            Thread(target=_check_sensors).start()  # Loops every 1 second (Sensor, Chart & Clock update)
-        else:
-            print(f"{p.WARN} Sensors already running {p.ENDC} \n")
-
-    elif global_action == 'sensors_off':
-        if sensors_on:
-            sensors_on = False  # it should stop thread
-            print(f"{p.MSGS} Sensors are now off {p.ENDC} \n")
-        else:
-            print(f"{p.WARN} [WARNING] Sensors not running {p.ENDC} \n")
-
-    print(f"{p.MSGS} [  HVAC On: {hvac_on}  ][  'action': {global_action}  ]{p.ENDC} \n")
-
-    # WEATHER OPERATIONS:
 
     return render_template('hub/thermostat.html', title=" - Thermostat", sp=HOME_SETPOINT)
 
@@ -267,7 +196,7 @@ def schedules():
         sleep = request.form["sleep-display"].strip(' ')
         
         
-        print(awake, sleep)
+        # print(awake, sleep)
         config.set('HVAC', 'awake_time', awake)
         config.set('HVAC', 'sleep_time', sleep)
         AWAKE_TIME = awake
@@ -293,7 +222,6 @@ def settings(page=None):
     global BACKGROUND_TYPE, BACKGROUND_POS, INTERFACE_THEME, INTERFACE_UNITS, BACKGROUND_COLOR, BACKGROUND_FILE, WEATHER_LOCATION, weather_cls, RESULT_LIST, LOCATION
 
     if request.method == "POST":
-        print(request.form)
         BACKGROUND_TYPE = request.form["image-type"]
         BACKGROUND_POS = request.form["image-position"]
         INTERFACE_THEME = request.form["interface-theme"]
@@ -313,7 +241,6 @@ def settings(page=None):
             RESULT_LIST = []
 
         if "search-results" in request.form:
-            print(request.form["search-results"])
             LOCATION = request.form["search-results"]
             config.set('WEATHER', 'location', LOCATION)
 
@@ -344,9 +271,11 @@ def settings(page=None):
 def update_sensor_data():
     """Request route for sensor and time data
     """
-    global temp, hum, time_now
+    global temp, hum, time_now, sensor_data
 
     d = datetime.strptime(time_now, "%H:%M")
+
+    sensor_data.put([temp, hum])
 
     return jsonify({
         'temperature': str(temp) + ' &#176;',
@@ -357,15 +286,26 @@ def update_sensor_data():
 
 @app.route('/_mode_changed', methods=["POST"])
 def _mode_changed():
-    global mode, hvac_cls, hvac_on, sensors_on, config
+    global mode, global_action, hvac_cls, hvac_on, sensors_on, config
 
     if request.method == "POST":
         try:
             new_mode = str(request.data, "utf-8")
 
             if mode == 'off' and new_mode != mode:
+                # Turn back on from an off position
                 print(f"{p.MSGS} Reloading... {p.ENDC} \n")
                 mode = new_mode
+                hvac_on = True
+                hvac_cls.mode_change(mode)
+
+                Thread(target=_hvac_control).start()
+
+                config.set('HVAC', 'mode', mode)
+
+                with open('saved_config.ini', 'w') as f:
+                    config.write(f)
+
                 return redirect(url_for('thermostat', action='on'))
             elif new_mode != mode:
                 mode = new_mode
@@ -378,9 +318,11 @@ def _mode_changed():
                 if mode == 'off':
                     hvac_on = False
                     hvac_cls.mode_change(mode)
+                    global_action = 'hvac_off'
                 else:
                     hvac_cls.mode_change(mode)
                     hvac_cls.relay_control(temp, hum, mode)
+                    global_action = 'on'
 
                 return "mode changed"
 
@@ -417,7 +359,6 @@ def _sp_changed():
         except KeyError:
             new_sp = float(request.form["home_temp"])
             if new_sp != HOME_SETPOINT and hvac_on:
-                print("setting new")
                 HOME_SETPOINT = new_sp
                 config.set('HVAC', 'setpoints', str([HOME_SETPOINT, AWAY_SETPOINT, SLEEP_SETPOINT]))
 
@@ -465,7 +406,7 @@ def _update_chart():
     """Request route for updating chart data
         NEEDS METHOD TO STOP IT FROM REFRESHING IF GENERATOR ALREADY RUNNING
     """
-    global sensors_on, temp, hum, time_now
+    global sensors_on, temp, hum, time_now, exit_event, FlaskServer, ThreadList
 
     def update_data():
         print(f"{p.START} [Start of Chart-Loop] {p.ENDC} \n")
@@ -475,6 +416,15 @@ def _update_chart():
             json_data = json.dumps(
                 {'time': d.strftime("%-I:%M %p"), 'temp': float(temp), 'hum': float(hum), 'refresh': 'false'})
             yield f"data:{json_data}\n\n"
+
+            if exit_event.is_set():
+                for thread in ThreadList:
+                    thread.join()
+
+                FlaskServer.terminate()
+                FlaskServer.join()
+                break
+
             sleep(60)
 
         print(f"{p.WARN} [Stopping Chart-Loop] {p.ENDC} \n")
@@ -489,10 +439,72 @@ def _update_weather():
     return jsonify(weather_dict)
 
 
+""" MAIN RUN SECTION
+"""
 if __name__ == '__main__':
+    ThreadList = []
 
-    app.run(
-        host="0.0.0.0",  # "open.sht",
-        port="5050",
-        debug=True,
-        threaded=True)
+    if mode == "off":
+        global_action = "hvac_off"
+
+        if hvac_on:
+            hvac_on = False  # it should stop thread
+            mode = 'off'
+            print(f"{p.MSGS} HVAC is now off {p.ENDC} \n")
+        else:
+            print(f"{p.WARN} [WARNING] HVAC not running {p.ENDC} \n")
+        if not sensors_on:
+            sensors_on = True
+            sensors = Thread(target=_check_sensors)  # Loops every 1 second (Sensor, Chart & Clock update)
+            ThreadList.append(sensors)
+        else:
+            print(f"{p.WARN} Sensors already running {p.ENDC} \n")
+
+    elif global_action == 'on':
+        if not sensors_on:
+            sensors_on = True
+            sensors = Thread(target=_check_sensors)  # Loops every 1 second (Sensor, Chart & Clock update)
+            ThreadList.append(sensors)
+        else:
+            print(f"{p.WARN} Sensors already running {p.ENDC} \n")
+
+        if not hvac_on:
+            hvac_on = True
+            hvac = Thread(target=_hvac_control)  # Loops every 10 minutes (Relay Control)
+            ThreadList.append(hvac)
+        else:
+            print(f"{p.WARN} HVAC already running {p.ENDC} \n")   
+
+    elif global_action == 'sensors_off':
+        if sensors_on:
+            sensors_on = False  # it should stop thread
+            print(f"{p.MSGS} Sensors are now off {p.ENDC} \n")
+        else:
+            print(f"{p.WARN} [WARNING] Sensors not running {p.ENDC} \n")
+
+    else:
+        print(f"{p.WARN} [WARNING] mode error {p.ENDC} \n")
+
+    """ Support GUI for the 3" TFT touchscreen for SBC's ( GUIZERO [...for now] ) """
+    if MINI_GUI:
+        GUI = mini_gui
+        small_gui = Thread( target=GUI, 
+                args=(sensor_data, exit_event)
+                )        
+        ThreadList.append(small_gui)
+
+    """ INITIALIZE ALL THE THREADS:
+        - Sensor Thread
+        - HVAC Control Thread
+        - Mini GUI for 3in TFT Thread
+    """ 
+    for thread in ThreadList:
+        thread.start()
+
+    """ Start the Flask Server as the MAIN / ROOT Thread """
+    FlaskServer = Process(target=app.run(
+                                        host="0.0.0.0",  # "open.sht",
+                                        port="5050",
+                                        debug=False,
+                                        threaded=True))
+    FlaskServer.start()

@@ -181,7 +181,7 @@ class HvacControl:
         self.humidity = hum
         self.mode = mode
 
-        print(f"{p.START} Start of HVAC-Thread \n     [MODE]: {self.mode} \n     [SETPOINT]: {self.home_setpoint} {p.ENDC}\n")
+        print(f"{p.START} HVAC-Thread Loop \n     [MODE]: {self.mode} \n     [SETPOINT]: {self.home_setpoint} {p.ENDC}\n")
 
         if self.currently_awake and self.currently_home:
             current_sp = self.home_setpoint

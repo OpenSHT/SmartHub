@@ -19,7 +19,7 @@ class Weather:
             country = search[1].strip(' ')
             id_num = search[2].strip(' id:')
             url_str = f'http://api.openweathermap.org/data/2.5/weather?id={id_num}&appid={self.owm_key}&units={self.units}'
-            print(id_num)
+            # print(id_num)
 
         else:
             city, country = search
@@ -29,8 +29,8 @@ class Weather:
 
         self.units = str(units)
         
-        print(city, country)
-        print(url_str)
+        # print(city, country)
+        # print(url_str)
 
         try:
             source = urllib.request.urlopen(url_str).read()
@@ -70,12 +70,12 @@ class Weather:
             city = search[0]
             country = ''
         
-        print(city, country)
+        # print(city, country)
         state = ''
         results = []
 
         url_str = f'http://api.openweathermap.org/data/2.5/find?q={city},{state},{country}&appid={self.owm_key}'
-        print(url_str)
+        # print(url_str)
         try:
             source = urllib.request.urlopen(url_str).read()
         except Exception:
@@ -85,14 +85,14 @@ class Weather:
         weather_dict = json.loads(source)
 
         if int(weather_dict['cod']) == 200:
-            print('Got it')
-            print(weather_dict)
+            # print('Got it')
+            # print(weather_dict)
             i = 0
             for i in range(0, weather_dict['count']):
                 results.append(weather_dict['list'][i]['name'] + ',' + weather_dict['list'][i]['sys']['country'] + ', id: ' + str(weather_dict['list'][i]['id']))
                 i += 1
-        print('here is results')
-        print(results)
+        # print('here is results')
+        # print(results)
 
         
         return results
