@@ -29,15 +29,16 @@ class Weather:
 
         self.units = str(units)
         
-        # print(city, country)
-        # print(url_str)
+        print(city, country)
+        print(url_str)
 
         try:
             source = urllib.request.urlopen(url_str).read()
+            # converting JSON data to a dictionary
+            weather_dict = json.loads(source)
         except Exception:
             print("WARNING: Request to OWM failed, check your API KEY!!")
-        # converting JSON data to a dictionary
-        weather_dict = json.loads(source)
+        
 
         if weather_dict['cod'] == 200:
             weather_status = {

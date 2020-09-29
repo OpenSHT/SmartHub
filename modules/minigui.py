@@ -19,8 +19,6 @@ def mini_gui(sensor_queue, close_event):
     BTN_X = 20
     BTN_Y = 1
 
-    print(close_event)
-
     def data_listener():
         data_list = sensor_info.get()
         temp_show.value = str(data_list[0])
@@ -43,7 +41,8 @@ def mini_gui(sensor_queue, close_event):
     app = App(bg=BACKGROUND, width=480, height=320)  #, layout="grid"
     app.text_color = TEXT
     app.repeat(1000, exit_listener)
-    app.on_close(exit_app)
+    app.when_closed = exit_app
+    # app.on_close(exit_app)
 
     #  NAVBAR SECTION
     nav_box = Box(app, align="top", width="fill", height="30px")

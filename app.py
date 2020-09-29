@@ -3,13 +3,16 @@ from time import sleep
 from datetime import datetime
 from threading import Thread, Event
 from multiprocessing import Process
+from multiprocessing import Queue as pQueue
 import json
+import sys
 from configparser import ConfigParser
 # My Modules("/modules"):
 from modules.thermostat import Sensors, HvacControl
 from modules.extras import Colors
 from modules.weather import Weather
 from modules.minigui import mini_gui
+from modules.bt_classic import Bluetooth
 from queue import Queue
 
 app = Flask(__name__)
@@ -24,9 +27,11 @@ setpoints = config.get('HVAC', 'setpoints').strip(' []').split(',')
 HOME_SETPOINT = float(setpoints[0])  
 AWAY_SETPOINT = float(setpoints[1])
 SLEEP_SETPOINT = float(setpoints[2])
+SETPOINTS = setpoints
 
 AWAKE_TIME = str(config.get('HVAC', 'awake_time'))
 SLEEP_TIME = str(config.get('HVAC', 'sleep_time'))
+HOME_AWAY = [AWAKE_TIME, SLEEP_TIME]
 
 mode = str(config.get('HVAC', 'mode'))
 LOCATION = str(config.get('WEATHER', 'location'))
@@ -41,6 +46,19 @@ INTERFACE_UNITS = str(config.get('WEATHER', 'units'))
 WEATHER_LOCATION = ""
 RESULT_LIST = []
 MINI_GUI = bool(config.get('APP', 'mini-gui'))
+
+BT_ROOMS = config.get('BT_DEVICES', 'bt_rooms').split(',')
+BT_MACS = config.get('BT_DEVICES', 'bt_macs').split(',')
+BT_PRIORITY = config.get('BT_DEVICES', 'bt_priorities').split(',')
+SAVED_BT_SENSORS = {}
+
+for i in range(len(BT_ROOMS)):
+    SAVED_BT_SENSORS[BT_ROOMS[i]] = [ BT_MACS[i], BT_PRIORITY[i] ]
+
+bt_sensor_data = pQueue()
+setpoint_q = pQueue()
+action_q = pQueue()
+bluetooth_cls = Bluetooth(SAVED_BT_SENSORS, bt_sensor_data)
 # <========================> #
 
 """ **** SETUP YOUR SENSOR!!!! ****:
@@ -95,62 +113,66 @@ sensor_cls = Sensors(METHOD[0],
 SENSOR_DELAY = 2.0  # seconds
 
 p = Colors()
-HOME_AWAY = [AWAKE_TIME, SLEEP_TIME]
 hvac_cls = HvacControl()
-hvac_cls.sp_change(setpoints, HOME_AWAY)
+hvac_cls.sp_change(SETPOINTS, HOME_AWAY)
 hvac_cls.mode_change(mode)
+c_index = hvac_cls.get_home_awake(HOME_AWAY, get=True)
+CURRENT_SP = SETPOINTS[c_index]
 
 weather_cls = Weather(OWM_API_KEY)
 
 # Shared data Queues for MiniGUI
 sensor_data = Queue()
 
-temp = 0.0
-hum = 0.0
-sensors_on = False  # to control loop in thread
+primary_temp = 0.0
+primary_hum = 0.0
 time_now = datetime.now().strftime("%H:%M")
 hvac_loop = 600.0  # seconds (10 minutes)
-hvac_on = False
+
 
 global_action = 'on'
-
+sensors_on = False  # to control loop in thread
+bt_on = False
+hvac_on = False
 exit_event = Event()
 exit_event.clear()
 
 def _hvac_control():
     """THREAD: Runs every 10 minutes (600 sec)
-            :returns temp, hum
+            :returns primary_temp, primary_hum
     """
-    global sensors_on, temp, hum, mode, hvac_loop, hvac_cls, HOME_SETPOINT, exit_event
+    global sensors_on, primary_temp, primary_hum, mode, hvac_loop, hvac_cls, SETPOINTS, HOME_AWAY, exit_event
 
     sleep(2)
-    print(f"{p.START} Start of HVAC-Thread {p.ENDC} \n")
+    print(f"{p.START} |*** Start of HVAC Thread ***| {p.ENDC} \n")
     
     while hvac_on:
-        hvac_cls.relay_control(temp, hum, mode)
+
+        hvac_cls.relay_control(primary_temp, primary_hum, mode)
 
         if exit_event.is_set():
             break
 
         sleep(hvac_loop)
     
-    print(f"{p.WARN} Stopping HVAC-Thread {p.ENDC} \n")
+    print(f"{p.WARN} |*** Stopping HVAC Thread ***|{p.ENDC} \n")
 
 
 def _check_sensors():
     """THREAD: Runs every 1 second
-        :returns temp, hum
+        :returns primary_temp, primary_hum
     """
-    global sensors_on, hvac_on, global_action, temp, hum, time_now, sensor_cls, hvac_cls, HOME_SETPOINT, SENSOR_DELAY, exit_event
+    global sensors_on, hvac_on, global_action, primary_temp, primary_hum, time_now, sensor_cls, hvac_cls, SETPOINTS, HOME_AWAY, SENSOR_DELAY, CURRENT_SP, exit_event, action_q
 
-    print(f"{p.START} Start of Sensor-Thread {p.ENDC} \n")
+    print(f"{p.START} |*** Start of Sensor Thread ***| {p.ENDC} \n")
     count = 0
     zero_count = 0
 
     while sensors_on:  # global variable to stop loop
+        # Get Primary Sensor Data:
         try:
-            temp, hum = sensor_cls.get_data()
-            if temp == 0.0:
+            primary_temp, primary_hum = sensor_cls.get_data()
+            if primary_temp == 0.0:
                 zero_count += 1
                 if zero_count == 3:
                     global_action = "sensors_off"
@@ -160,17 +182,126 @@ def _check_sensors():
 
         time_now = datetime.now().strftime("%H:%M")
         count += 1
-
-        if hvac_on and count == 60 and abs(HOME_SETPOINT - temp) > 1.5:
+        
+        if hvac_on and count == 60 and abs(CURRENT_SP - primary_temp) > 1.5:
             count = 0
-            hvac_cls.relay_control(temp, hum, mode)
+            hvac_cls.relay_control(primary_temp, primary_hum, mode)
 
         if exit_event.is_set():
             break
 
         sleep(SENSOR_DELAY)
 
-    print(f"{p.WARN} Stopping Sensor-Thread {p.ENDC} \n")
+    print(f"{p.WARN} |*** Stopping Sensor Thread ***| {p.ENDC} \n")
+
+def _check_bt_sensors(data_q, set_point_q, action_q, get_sp):
+    data_q = data_q
+    current_setpoint = get_sp([], get=True)
+
+    def highest_priority(temp, hum, current_sp):
+        """"""
+        if abs(current_sp - temp) >= 0.5:
+            print(f"Priority HIGHEST, turning on HVAC:  {temp}, {hum}")
+        else:
+            print(f"Priority HIGHEST, doing nothing:  {temp}, {hum}")
+
+    def high_priority(temp, hum, current_sp):
+        """"""
+        if abs(current_sp - temp) >= 0.75:
+            print(f"Priority HIGH, turning on HVAC:  {temp}, {hum}")
+        else:
+            print(f"Priority HIGH, doing nothing:  {temp}, {hum}")
+
+    def med_priority(temp, hum, current_sp):
+        """"""
+        if abs(current_sp - temp) >= 1.25:
+            print(f"Priority MED, turning on HVAC:  {temp}, {hum}")
+        else:
+            print(f"Priority MED, doing nothing:  {temp}, {hum}")
+
+    def low_priority(temp, hum, current_sp):
+        """"""
+        if abs(current_sp - temp) >= 2.0:
+            print(f"Priority LOW, turning on HVAC:  {temp}, {hum}")
+        else:
+            print(f"Priority LOW, doing nothing:  {temp}, {hum}")
+
+    while bt_on:
+        try:
+            current_setpoint = get_sp([], get=True)
+        except:
+            pass
+
+        try:
+            reading = data_q.get(block=True, timeout=2)
+
+            for key in SAVED_BT_SENSORS:
+                if key in reading.keys():
+                    temperature = reading[key][0]
+                    humidity = reading[key][1].strip('/r')
+                    if SAVED_BT_SENSORS[key][1] == "highest":
+                        highest_priority(float(temperature), float(humidity), float(current_setpoint))
+                    elif SAVED_BT_SENSORS[key][1] == "high":
+                        high_priority(float(temperature), float(humidity), float(current_setpoint))
+                    elif SAVED_BT_SENSORS[key][1] == "med":
+                        med_priority(float(temperature), float(humidity), float(current_setpoint))
+                    elif SAVED_BT_SENSORS[key][1] == "low":
+                        low_priority(float(temperature), float(humidity), float(current_setpoint))
+                    else:
+                        print(SAVED_BT_SENSORS[key][1])
+
+        except KeyboardInterrupt:
+            print("Closing Connections")
+            # for thread in sensor_threads:
+            #     thread.join()
+            break
+        
+        except Exception as e:
+            print(e)
+            pass
+
+# def get_current_sp(sp_change=None):
+#     global SETPOINTS, HOME_AWAY
+
+#     changed_sp = sp_change
+#     current_index = 0
+
+#     if 'PM' in HOME_AWAY[0]:
+#         awake_tm = HOME_AWAY[0].strip('PM').split(':')
+#         awake_min = ((int(awake_tm[0]) + 12) * 60) + int(awake_tm[1])
+#     else:
+#         awake_tm = HOME_AWAY[0].strip('AM').split(':')
+#         awake_min = (int(awake_tm[0]) * 60) + int(awake_tm[1])
+
+#     if 'PM' in HOME_AWAY[1]:
+#         sleep_tm = HOME_AWAY[1].strip('PM').split(':')
+#         sleep_min = ((int(sleep_tm[0]) + 12) * 60) + int(sleep_tm[1])
+#     else:
+#         sleep_tm = HOME_AWAY[1].strip('AM').split(':')
+#         sleep_min = (int(sleep_tm[0]) * 60) + int(sleep_tm[1])
+
+#     result = localtime(time())
+
+#     current_hour = result.tm_hour
+#     current_min = result.tm_min
+
+#     current_tm = (current_hour * 60) + current_min
+
+#     if current_tm >= awake_min and current_tm < sleep_min:
+#         current_index = 0
+#         if changed_sp:
+#             return current_index
+#         else:
+#             return SETPOINTS[current_index]
+#     else:
+#         current_index = 1
+#         if changed_sp:
+#             return current_index
+#         else:
+#             return SETPOINTS[current_index]
+
+#     else:
+
 
 
 @app.route("/")
@@ -179,11 +310,11 @@ def _check_sensors():
 def thermostat(action='on'):
     """THERMOSTAT PAGE
     """
-    global global_action  #, sensors_on, hvac_on, temp, hum, time_now, mode, HOME_SETPOINT, LOCATION, weather_cls
+    global global_action  #, sensors_on, hvac_on, primary_temp, primary_hum, time_now, mode, CURRENT_SP, LOCATION, weather_cls
 
     global_action = f"{action}"
 
-    return render_template('hub/thermostat.html', title=" - Thermostat", sp=HOME_SETPOINT)
+    return render_template('hub/thermostat.html', title=" - Thermostat", sp=CURRENT_SP)
 
 
 @app.route("/schedules", methods=['POST', 'GET'])
@@ -271,15 +402,15 @@ def settings(page=None):
 def update_sensor_data():
     """Request route for sensor and time data
     """
-    global temp, hum, time_now, sensor_data
+    global primary_temp, primary_hum, time_now, sensor_data
 
     d = datetime.strptime(time_now, "%H:%M")
 
-    sensor_data.put([temp, hum])
+    sensor_data.put([primary_temp, primary_hum])
 
     return jsonify({
-        'temperature': str(temp) + ' &#176;',
-        'humidity': str(hum) + ' %',
+        'temperature': str(primary_temp) + ' &#176;',
+        'humidity': str(primary_hum) + ' %',
         'time_now': d.strftime("%-I:%M %p"),
     })
 
@@ -307,6 +438,7 @@ def _mode_changed():
                     config.write(f)
 
                 return redirect(url_for('thermostat', action='on'))
+
             elif new_mode != mode:
                 mode = new_mode
                 print(f"{p.MSGS} [MODE CHANGE]: {mode} {p.ENDC} \n")
@@ -321,7 +453,7 @@ def _mode_changed():
                     global_action = 'hvac_off'
                 else:
                     hvac_cls.mode_change(mode)
-                    hvac_cls.relay_control(temp, hum, mode)
+                    hvac_cls.relay_control(primary_temp, primary_hum, mode)
                     global_action = 'on'
 
                 return "mode changed"
@@ -336,38 +468,43 @@ def _mode_changed():
 
 @app.route('/_sp_changed', methods=["POST"])
 def _sp_changed():
-    global HOME_SETPOINT, AWAY_SETPOINT, SLEEP_SETPOINT, AWAKE_TIME, SLEEP_TIME, temp, hum, mode, hvac_on, config
+    global SETPOINTS, HOME_AWAY, CURRENT_SP, primary_temp, primary_hum, mode, hvac_on, config, setpoint_q
     
     if request.method == "POST":
         
         try:
-            AWAY_SETPOINT = float(request.form["away_temp"])
-            SLEEP_SETPOINT = float(request.form["sleep_temp"])
-            HOME_SETPOINT = float(request.form["home_temp"])
+            SETPOINTS[0] = float(request.form["away_temp"])
+            SETPOINTS[1] = float(request.form["sleep_temp"])
+            SETPOINTS[2] = float(request.form["home_temp"])
 
-            config.set('HVAC', 'setpoints', str([HOME_SETPOINT, AWAY_SETPOINT, SLEEP_SETPOINT]))
+            config.set('HVAC', 'setpoints', str(SETPOINTS))
 
             with open('saved_config.ini', 'w') as f:
                 config.write(f)
 
             print("SAVED NEW CONFIG\n")
-            hvac_cls.sp_change([HOME_SETPOINT, AWAY_SETPOINT, SLEEP_SETPOINT], [AWAKE_TIME, SLEEP_TIME])
-            hvac_cls.relay_control(temp, hum, mode)
+            # Send to HVAC Thread
+            hvac_cls.sp_change( SETPOINTS, HOME_AWAY )
+            hvac_cls.relay_control(primary_temp, primary_hum, mode)
+            # Send to BLUETOOTH Process
+            setpoint_q.put( SETPOINTS, HOME_AWAY )
 
             return "setpoints changed"
         
         except KeyError:
-            new_sp = float(request.form["home_temp"])
-            if new_sp != HOME_SETPOINT and hvac_on:
-                HOME_SETPOINT = new_sp
-                config.set('HVAC', 'setpoints', str([HOME_SETPOINT, AWAY_SETPOINT, SLEEP_SETPOINT]))
+            new_sp = float(request.form["current_temp_sp"])
+            if new_sp != CURRENT_SP and hvac_on:
+                CURRENT_SP = new_sp
+                index = hvac_cls.get_home_awake(HOME_AWAY, get=True)
+                SETPOINTS[index] = CURRENT_SP
+                config.set('HVAC', 'setpoints', str(SETPOINTS))
 
                 with open('saved_config.ini', 'w') as f:
                     config.write(f)
 
                 print("SAVED NEW CONFIG\n")
-                hvac_cls.sp_change([HOME_SETPOINT, AWAY_SETPOINT, SLEEP_SETPOINT], [AWAKE_TIME, SLEEP_TIME])
-                hvac_cls.relay_control(temp, hum, mode)
+                hvac_cls.sp_change( SETPOINTS, HOME_AWAY )
+                hvac_cls.relay_control(primary_temp, primary_hum, mode)
 
             return "setpoint changed"
 
@@ -406,28 +543,33 @@ def _update_chart():
     """Request route for updating chart data
         NEEDS METHOD TO STOP IT FROM REFRESHING IF GENERATOR ALREADY RUNNING
     """
-    global sensors_on, temp, hum, time_now, exit_event, FlaskServer, ThreadList
+    global sensors_on, primary_temp, primary_hum, time_now, exit_event, FlaskServer, ThreadList
 
     def update_data():
-        print(f"{p.START} [Start of Chart-Loop] {p.ENDC} \n")
+        print(f"{p.START} |*** Start of Chart GENERATOR ***| {p.ENDC} \n")
 
         while sensors_on:  # global variable to stop loop
             d = datetime.strptime(time_now, "%H:%M")
             json_data = json.dumps(
-                {'time': d.strftime("%-I:%M %p"), 'temp': float(temp), 'hum': float(hum), 'refresh': 'false'})
+                {'time': d.strftime("%-I:%M %p"), 'temp': float(primary_temp), 'hum': float(primary_hum), 'refresh': 'false'})
             yield f"data:{json_data}\n\n"
 
             if exit_event.is_set():
+                # shutdown = 5  #request.environ.get('werkzeug.server.shutdown')
+                # if shutdown is None:
+                #     raise RuntimeError("the function is unavailable")
+                # else:
+                    # print(f"{p.WARN} CLOSING... {p.ENDC} \n")
+                    # sys.exit()
+                    # shutdown()
+
                 for thread in ThreadList:
                     thread.join()
-
-                FlaskServer.terminate()
-                FlaskServer.join()
                 break
 
             sleep(60)
 
-        print(f"{p.WARN} [Stopping Chart-Loop] {p.ENDC} \n")
+        print(f"{p.WARN} |*** Stopping Chart Generator ***| {p.ENDC} \n")
 
     return Response(update_data(), mimetype='text/event-stream')
 
@@ -452,13 +594,20 @@ if __name__ == '__main__':
             mode = 'off'
             print(f"{p.MSGS} HVAC is now off {p.ENDC} \n")
         else:
-            print(f"{p.WARN} [WARNING] HVAC not running {p.ENDC} \n")
+            print(f"{p.WARN} HVAC not running {p.ENDC} \n")
+
         if not sensors_on:
             sensors_on = True
             sensors = Thread(target=_check_sensors)  # Loops every 1 second (Sensor, Chart & Clock update)
             ThreadList.append(sensors)
         else:
             print(f"{p.WARN} Sensors already running {p.ENDC} \n")
+
+        if bt_on:
+            bt_on = False  # it should stop thread
+            print(f"{p.MSGS} BT is now off {p.ENDC} \n")
+        else:
+            print(f"{p.WARN} BT not running {p.ENDC} \n")
 
     elif global_action == 'on':
         if not sensors_on:
@@ -466,14 +615,21 @@ if __name__ == '__main__':
             sensors = Thread(target=_check_sensors)  # Loops every 1 second (Sensor, Chart & Clock update)
             ThreadList.append(sensors)
         else:
-            print(f"{p.WARN} Sensors already running {p.ENDC} \n")
+            print(f"{p.WARN} Sensors already on {p.ENDC} \n")
 
         if not hvac_on:
             hvac_on = True
             hvac = Thread(target=_hvac_control)  # Loops every 10 minutes (Relay Control)
             ThreadList.append(hvac)
         else:
-            print(f"{p.WARN} HVAC already running {p.ENDC} \n")   
+            print(f"{p.WARN} HVAC already on {p.ENDC} \n")
+
+        if not bt_on:
+            bt_on = True  # it starts thread
+            bt_classic = Process(target=_check_bt_sensors, args=(bt_sensor_data, setpoint_q, action_q, hvac_cls.get_home_awake))
+            bt_classic.start()
+        else:
+            print(f"{p.WARN} BT already on {p.ENDC} \n")
 
     elif global_action == 'sensors_off':
         if sensors_on:
@@ -481,6 +637,12 @@ if __name__ == '__main__':
             print(f"{p.MSGS} Sensors are now off {p.ENDC} \n")
         else:
             print(f"{p.WARN} [WARNING] Sensors not running {p.ENDC} \n")
+
+        if bt_on:
+            bt_on = False  # it should stop thread
+            print(f"{p.MSGS} BT is now off {p.ENDC} \n")
+        else:
+            print(f"{p.WARN} BT not running {p.ENDC} \n")
 
     else:
         print(f"{p.WARN} [WARNING] mode error {p.ENDC} \n")
@@ -492,6 +654,10 @@ if __name__ == '__main__':
                 args=(sensor_data, exit_event)
                 )        
         ThreadList.append(small_gui)
+
+    """ START BLUETOOTH SETUP """
+    bt = Process(target=bluetooth_cls.connect_all)
+    bt.start()
 
     """ INITIALIZE ALL THE THREADS:
         - Sensor Thread

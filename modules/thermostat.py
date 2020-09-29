@@ -23,7 +23,7 @@ class Sensors:
         self.method = str(method)
         self.device = str(device)
         self.identifier = str(identifier)
-        print(self.method, self.device, self.identifier)
+        # print(self.method, self.device, self.identifier)
 
         if self.method == METHOD[0]:  # Serial
             """This if statement is entirely in-case devices need separate methods"""
@@ -36,7 +36,7 @@ class Sensors:
 
                 for port in ports:
                     if self.identifier in port[1]:
-                        print(port)
+                        # print(port)
                         serial_port = str(port[0])
                         self.microC = serial.Serial(serial_port, self.baud_rate, timeout=3)
                         self.microC.flushInput()
@@ -136,17 +136,21 @@ class HvacControl:
         self.awake_time = new_times[0]
         self.sleep_time = new_times[1]
         
-        self.currently_awake = self.get_home_awake(self.awake_time, self.sleep_time)
+        self.currently_awake = self.get_home_awake([self.awake_time, self.sleep_time])
         
-        print(new_sps, new_times)
+        # print(new_sps, new_times)
 
     def mode_change(self, new_mode):
         """"""
         self.mode = new_mode
 
-    def get_home_awake(self, awake, home):
-        awake_tm = awake
-        sleep_tm = home
+    def get_home_awake(self, home_awake, get=False):
+        if len(home_awake) > 0:
+            awake_tm = home_awake[0]
+            sleep_tm = home_awake[1]
+        else:
+            awake_tm = self.awake_time
+            sleep_tm = self.sleep_time
 
         if 'PM' in awake_tm:
             awake_tm = awake_tm.strip('PM').split(':')
@@ -170,9 +174,23 @@ class HvacControl:
         current_tm = (current_hour * 60) + current_min
 
         if current_tm >= awake_min and current_tm < sleep_min:
-            return True
+            if get:
+                if len(home_awake) > 0:
+                    current_index = 0
+                    return current_index
+                else:                        
+                    return self.home_setpoint
+            else:
+                return True
         else:
-            return False
+            if get:
+                if len(home_awake) > 0:
+                    current_index = 1
+                    return current_index
+                else:
+                    return self.sleep_setpoint
+            else:
+                return False
 
 
     def relay_control(self, temp=21.0, hum=50.0, mode="off"):
@@ -181,7 +199,7 @@ class HvacControl:
         self.humidity = hum
         self.mode = mode
 
-        print(f"{p.START} HVAC-Thread Loop \n     [MODE]: {self.mode} \n     [SETPOINT]: {self.home_setpoint} {p.ENDC}\n")
+        # print(f"{p.START}     [MODE]: {self.mode} \n     [SETPOINT]: {self.home_setpoint} {p.ENDC}\n")
 
         if self.currently_awake and self.currently_home:
             current_sp = self.home_setpoint
