@@ -88,6 +88,7 @@ a.github:hover {
 .signature {
     margin-top: 20vh;
     text-align: center;
+    color: $active-text-dark;
 }
 /* ---------------------------------------------------
     SIDEBAR STYLE
@@ -261,7 +262,7 @@ input[type=color] {
     background: $active-text-dark;
 }
 
-.fa-search-location {
+.input_icon {
     position: absolute;
     color: $inverted-text-dark;
     top: 10px;

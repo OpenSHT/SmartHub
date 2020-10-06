@@ -1,5 +1,5 @@
 import json
-import pprint
+# import pprint
 import urllib.request
 
 
@@ -7,7 +7,7 @@ class Weather:
     def __init__(self, owm_key):
         self.owm_key = owm_key
         self.units = 'metric'  # ['imperial']
-        self.pp = pprint.PrettyPrinter(indent=4)
+        # self.pp = pprint.PrettyPrinter(indent=4)
 
     def update_owm(self, units, search):
         search = str(search).split(',')

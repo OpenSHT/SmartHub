@@ -7,3 +7,9 @@ class Colors:
     CONT = '\033[1;35m'  # Purple
     MSGS = '\033[1;36m'  # Cyan
     ENDC = '\033[m'      # Normal
+
+# Sensor Errors
+# p = Colors()
+# class SensorError(Exception):
+#     print(f"{p.WARN} SensorError: too many recurring bad readings from the sensor{p.ENDC} \n")
+#     pass

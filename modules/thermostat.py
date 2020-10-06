@@ -72,7 +72,7 @@ class Sensors:
                   f"Feel free to contribute {p.ENDC}")
 
         else:
-            print(f"{p.FAIL} {self.method} has not been integrated\n {p.ENDC}")
+            print(f"{p.FAIL} {self.method} has not been integrated {p.ENDC}")
 
     def reset_controller(self):
         wait_till_ready = self.microC.readline().decode()[:-2]
@@ -103,6 +103,47 @@ class Sensors:
             return 00.0, 00.0
 
 
+class HvacLogic:
+    """ Callable functions 
+    """
+    def get_action(self, data):
+        if data[0] == 4:
+            return self.highest_priority(data[1], data[2], data[3])
+        elif data[0] == 3:
+            return self.high_priority(data[1], data[2], data[3])
+        elif data[0] == 2:
+            return self.med_priority(data[1], data[2], data[3])
+        elif data[0] == 1:
+            return self.low_priority(data[1], data[2], data[3])
+
+    def highest_priority(self, setpoint, temp, hum):
+
+        if abs(setpoint - temp) >= 0.25:
+            return [4, temp, hum]
+        else:
+            return None
+
+    def high_priority(self, setpoint, temp, hum):
+        
+        if abs(setpoint - temp) >= 0.5:
+            return [3, temp, hum]
+        else:
+            return None
+
+    def med_priority(self, setpoint, temp, hum):
+
+        if abs(setpoint - temp) >= 1.0:
+            return [2, temp, hum]
+        else:
+            return None
+
+    def low_priority(self, setpoint, temp, hum):
+
+        if abs(setpoint - temp) >= 2.0:
+            return [1, temp, hum]
+        else:
+            return None
+
 class HvacControl:
     """ GPIO Relay Control
     - no way around commenting this out for testing,
@@ -127,6 +168,7 @@ class HvacControl:
     sleep_time = 1305
     currently_awake = True
     currently_home = True
+    active_wires = [0,0]
 
     def sp_change(self, new_sps, new_times):
         """"""
@@ -138,8 +180,6 @@ class HvacControl:
         
         self.currently_awake = self.get_home_awake([self.awake_time, self.sleep_time])
         
-        # print(new_sps, new_times)
-
     def mode_change(self, new_mode):
         """"""
         self.mode = new_mode
@@ -192,14 +232,47 @@ class HvacControl:
             else:
                 return False
 
+    def heat_high(self, p):
+        print(f"{p.FAIL}   Heat  ||  Fan-High  ))) {p.ENDC} ")
+        # GPIO.output(self.CHANNELS, GPIO.HIGH)
+        # GPIO.output([self.HEAT, self.FAN_H], GPIO.LOW)
+    
+    def heat_med(self, p):
+        print(f"{p.FAIL}   Heat  ||  Fan-Med  )) {p.ENDC} ")
+        # GPIO.output(self.CHANNELS, GPIO.HIGH)
+        # GPIO.output([self.HEAT, self.FAN_M], GPIO.LOW)
 
-    def relay_control(self, temp=21.0, hum=50.0, mode="off"):
+    def heat_low(self, p):
+        print(f"{p.FAIL}   Heat  ||  Fan-Low  ) {p.ENDC} ")
+        # GPIO.output(self.CHANNELS, GPIO.HIGH)
+        # GPIO.output([self.HEAT, self.FAN_L], GPIO.LOW)
+
+    def cool_high(self, p):
+        print(f"{p.BLUE}   Cool  ||  Fan-High  ))) {p.ENDC} ")
+        # GPIO.output(self.CHANNELS, GPIO.HIGH)
+        # GPIO.output([self.COOL, self.FAN_H], GPIO.LOW)
+
+    def cool_med(self, p):
+        print(f"{p.BLUE}   Cool  ||  Fan-Med  )) {p.ENDC} ")
+        # GPIO.output(self.CHANNELS, GPIO.HIGH)
+        # GPIO.output([self.COOL, self.FAN_M], GPIO.LOW)
+
+    def cool_low(self, p):
+        print(f"{p.BLUE}   Cool  ||  Fan-Low  ) {p.ENDC} ")
+        # GPIO.output(self.CHANNELS, GPIO.HIGH)
+        # GPIO.output([self.COOL, self.FAN_L], GPIO.LOW)
+
+    def all_off(self, p):
+        # GPIO.output(self.CHANNELS, GPIO.HIGH)
+        print(f"{p.FAIL} *  All OFF  * {p.ENDC} ")
+        self.active_wires = [0,0]
+        
+    def relay_control(self, temp=21.0, hum=50.0, priority=3, mode="off"):
         p = Colors()
         self.temperature = temp
         self.humidity = hum
         self.mode = mode
-
-        # print(f"{p.START}     [MODE]: {self.mode} \n     [SETPOINT]: {self.home_setpoint} {p.ENDC}\n")
+        self.priority = priority
 
         if self.currently_awake and self.currently_home:
             current_sp = self.home_setpoint
@@ -210,36 +283,37 @@ class HvacControl:
 
             if (self.temperature - current_sp) <= 0.00 and (self.mode == "auto" or self.mode == "heat"):
                 if (self.temperature - self.home_setpoint) <= - 1.50:
-                    print(f"{p.FAIL}   Heat  ||  Fan-High  >))) {p.ENDC} \n")
-                    # GPIO.output(self.CHANNELS, GPIO.HIGH)
-                    # GPIO.output([self.HEAT, self.FAN_H], GPIO.LOW)
-
+                    if self.active_wires != [1,3]:
+                        self.heat_high(p)
+                        self.active_wires = [1,3]
+                elif (self.temperature - current_sp) <= -0.75:
+                    if self.active_wires != [1,2]:
+                        self.heat_med(p)
+                        self.active_wires = [1,2]
                 elif (self.temperature - current_sp) <= -0.25:
-                    print(f"{p.FAIL}   Heat  ||  Fan-Med  >)) {p.ENDC} \n")
-                    # GPIO.output(self.CHANNELS, GPIO.HIGH)
-                    # GPIO.output([self.HEAT, self.FAN_M], GPIO.LOW)
-
+                    if self.active_wires != [1,1]:
+                        self.heat_low(p)
+                        self.active_wires = [1,1]
                 else:
-                    # GPIO.output(self.CHANNELS, GPIO.HIGH)
-                    print(f"{p.FAIL} *  All OFF  * {p.ENDC} \n")
+                    self.all_off(p)
                     pass
 
             elif (self.temperature - current_sp) >= 0.00 and (self.mode == "auto" or self.mode == "cool"):
                 if (self.temperature - self.home_setpoint) >= 1.50:
-                    print(f"{p.BLUE}   Cool  ||  Fan-High  >)) {p.ENDC} \n")
-                    # GPIO.output(self.CHANNELS, GPIO.HIGH)
-                    # GPIO.output([self.COOL, self.FAN_H], GPIO.LOW)
-
+                    if self.active_wires != [2,3]:
+                        self.cool_high(p)
+                        self.active_wires = [2,3]
+                elif (self.temperature - current_sp) >= 0.75:
+                    if self.active_wires != [2,2]:
+                        self.cool_med(p)
+                        self.active_wires = [2,2]
                 elif (self.temperature - current_sp) >= 0.25:
-                    print(f"{p.BLUE}   Cool  ||  Fan-Med  >)) {p.ENDC} \n")
-                    # GPIO.output(self.CHANNELS, GPIO.HIGH)
-                    # GPIO.output([self.COOL, self.FAN_M], GPIO.LOW)
-
+                    if self.active_wires != [2,1]:
+                        self.cool_low(p)
+                        self.active_wires = [2,1]
                 else:
-                    # GPIO.output(self.CHANNELS, GPIO.HIGH)
-                    print(f"{p.BLUE} *  All OFF  * {p.ENDC} \n")
+                    self.all_off(p)
                     pass
             else:
-                # GPIO.output(self.CHANNELS, GPIO.HIGH)
-                print(f"{p.MSGS} [MESSAGE] not on 'AUTO' {p.ENDC} \n")
+                self.all_off(p)
                 pass

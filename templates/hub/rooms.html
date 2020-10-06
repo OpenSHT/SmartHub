@@ -1,13 +1,85 @@
 {% extends "base.html" %}
 
-    {% block title %}{{ title }}{% endblock title %}
+    {% block title %}
+    {{ title }}
+    {% endblock title %}
     
     {% block main_content %}
     <div id="content">
         <div class="setting-header">Room Setup</div>
 
         <div class="container">
-            <p>Hey this the rooms page</p>
+
+            <div class="row">
+                <!-- <h3 class="setting-subheader">Rooms</h3> -->
+                <div class="col-20 table_title">Name</div>
+                <div class="col-20 table_title">MAC Addr</div>
+                <div class="col-20 table_title">Priority</div>
+                <div class="col-20 table_title">Reading</div>
+                <div class="col-20 table_title">Edit</div>
+            </div>
+
+            <form class="row" id="device_header" action="#" method="post">
+
+            </form>
+
+            <div class="row">
+                <a href="#" id="add_device" class="add_device"><i class="fas fa-plus"></i></a>
+            </div>
+
+            <form id="room_form" action="#" method="post">
+                <!-- ROOM ADDITION FORM -->
+                <div class="row">
+                    <h3 class="h-divider">Add new room:</h3>
+                </div>
+
+                <div class="row">
+                    <div class="col-25">
+                        <label>Room Name: </label>
+                    </div>
+                    <div class="col-75 search_wrapper">
+                        <div class="input_wrap">
+                            <input type="text" id="room_name" name="room_name" placeholder="Bedroom"/>
+                            <i class="fas fa-house-user input_icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-25">
+                        <label>Device MAC Address: </label>
+                    </div>
+                    <div class="col-75 search_wrapper">
+                        <div class="input_wrap">
+                            <input type="text" id="mac_addr" name="mac_addr" placeholder="24:62:AB:F9:10:9E"/>
+                            <i class="fab fa-bluetooth input_icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-25">
+                        <label>Priority: </label>
+                    </div>
+                    <div class="col-75">
+                        <div class="col-wrapper">
+                            <select id="priority" name="priority">
+                                <option value="1">Low</option>
+                                <option value="2">Medium</option>
+                                <option value="3">High</option>
+                                <option id="highest" value="4">Highest</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <input class="rooms" type="submit" value="Submit">
+                </div>
+                <div class="h-divider"></div>
+            </form>
         </div>
     </div>
+    <!-- ROOMS JS -->
+	<script type="text/javascript" src="{{ url_for('static', filename = 'js/rooms.js') }}" defer></script>
     {% endblock main_content %}

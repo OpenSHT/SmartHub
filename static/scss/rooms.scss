@@ -1,0 +1,82 @@
+@import "./variables";
+
+#room_form {
+    display: none;
+}
+
+.col-20 {
+    float: left;
+    width: 20%;
+    text-align: center;
+    margin-top: 25px;
+}
+.table_title {
+    margin-top: 10px;
+    font-weight: 700;
+    border-bottom: 2px solid $active-text-dark;
+    border-left: 2px solid $active-text-dark;
+    border-right: 2px solid $active-text-dark;
+}
+
+a.add_device, a.edit_btn {
+    background: $primary-accent-theme;
+    color: $active-text-dark;
+    padding: 5px 15px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    float: right;
+    width: 45px;
+    align-content: center;
+}
+a.add_device {
+    margin-top: 25px;
+    background: yellowgreen;
+}
+a.add_device:hover {
+    background: $active-text-dark !important;
+    color: yellowgreen !important;
+}
+a.remove_btn {
+    background: $temp-color;
+    color: $active-text-dark;
+}
+a.edit_btn:hover {
+    color: $primary-accent-theme;
+    background: $active-text-dark;
+}
+a.remove_btn:hover {
+    color: $temp-color;
+    background: $active-text-dark;
+}
+
+.h-divider {
+    border-bottom: 2px solid $inactive-text-dark;
+    width: 100%;
+    margin-top: 25px;
+}
+.input_wrap {
+    display: flex;
+    align-content: center;
+    justify-items: center;
+    margin: 0;
+    // width: 100%;
+    position: relative;
+}
+#room_name, #mac_addr {
+    background: $iconcolor;
+    width: 100%;
+    transition: all 0.15s;
+}
+
+@media screen and (max-width: 600px) {
+    #room_form .col-25 {
+      width: 100%;
+      text-align: center;
+    //   margin: 40px 0px -20px 0px;
+    }
+
+    input[type=submit].room_sub {
+        margin-top: 30px;
+        width: 100%;
+    }
+}

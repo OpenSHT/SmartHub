@@ -75,7 +75,7 @@ $( function spSlider() {
                 url: '/_sp_changed',
                 type: "POST",
                 data: {
-                    home_temp: ui.value
+                    current_temp_sp: ui.value
                 },
                 success: function(response) {
                     console.log(response);

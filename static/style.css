@@ -821,6 +821,7 @@ a.github:hover {
 .signature {
   margin-top: 20vh;
   text-align: center;
+  color: #fff;
 }
 
 /* ---------------------------------------------------
@@ -1011,7 +1012,7 @@ input[type=color] {
   background: #fff;
 }
 
-.fa-search-location {
+.input_icon {
   position: absolute;
   color: #333;
   top: 10px;
@@ -1335,6 +1336,128 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
     width: 100%;
   }
   input[type=submit].scheduler {
+    margin-top: 30px;
+    width: 100%;
+  }
+}
+
+@font-face {
+  font-family: 'DSEG14 Classic-Bold Italic';
+  font-style: normal;
+  font-weight: normal;
+  src: local("DSEG14 Classic-Bold Italic"), url("./fonts/DSEG14Classic-BoldItalic.woff") format("woff");
+}
+
+.active-text .default {
+  color: #fff;
+}
+
+.inactive-text .default {
+  color: #a8a8a8;
+}
+
+.stroke-2 .default {
+  -webkit-text-stroke: 2px black;
+}
+
+canvas#chart_canvas {
+  background: transparent;
+  border-color: transparent;
+}
+
+.flex-content-sec {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  overflow: auto;
+}
+
+#room_form {
+  display: none;
+}
+
+.col-20 {
+  float: left;
+  width: 20%;
+  text-align: center;
+  margin-top: 25px;
+}
+
+.table_title {
+  margin-top: 10px;
+  font-weight: 700;
+  border-bottom: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #fff;
+}
+
+a.add_device, a.edit_btn {
+  background: #0090AC;
+  color: #fff;
+  padding: 5px 15px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  float: right;
+  width: 45px;
+  -ms-flex-line-pack: center;
+      align-content: center;
+}
+
+a.add_device {
+  margin-top: 25px;
+  background: yellowgreen;
+}
+
+a.add_device:hover {
+  background: #fff !important;
+  color: yellowgreen !important;
+}
+
+a.remove_btn {
+  background: #E91E63;
+  color: #fff;
+}
+
+a.edit_btn:hover {
+  color: #0090AC;
+  background: #fff;
+}
+
+a.remove_btn:hover {
+  color: #E91E63;
+  background: #fff;
+}
+
+.h-divider {
+  border-bottom: 2px solid #a8a8a8;
+  width: 100%;
+  margin-top: 25px;
+}
+
+.input_wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  justify-items: center;
+  margin: 0;
+  position: relative;
+}
+
+#room_name, #mac_addr {
+  background: #e4e4e4;
+  width: 100%;
+  -webkit-transition: all 0.15s;
+  transition: all 0.15s;
+}
+
+@media screen and (max-width: 600px) {
+  #room_form .col-25 {
+    width: 100%;
+    text-align: center;
+  }
+  input[type=submit].room_sub {
     margin-top: 30px;
     width: 100%;
   }

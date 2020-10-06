@@ -1,18 +1,24 @@
-from bluetooth import *
+from bluetooth import discover_devices, BluetoothSocket, lookup_name, RFCOMM
 from bluetooth.btcommon import BluetoothError
 from time import sleep
 from threading import Thread, Event
 import re
+from modules.extras import Colors
 
-class Bluetooth():
-    def __init__(self, device_dict, sensor_q):
+class BTManager():
+    def __init__(self, device_dict, sensor_q, bt_on):
         self.output = sensor_q
         self.target_name = "ESP32"
         self.target_addresses = []
         self.target_rooms = []
         self.sensor_threads = []
-        self.lessThanTwo = True
+        self.lessThanExpected = True
         self.saved_bt_devices = device_dict
+        self.bt_on = bt_on
+        self.p = Colors()
+
+    def bt_toggle(self, on_off):
+        self.bt_on = on_off
 
     def new_device(self, new_device):
         """  """
@@ -43,13 +49,13 @@ class Bluetooth():
             try:
                 socket = BluetoothSocket( RFCOMM )
                 socket.connect((address, 1))
-                print(f'{num}: Connected to: ', address)
+                print(f"{self.p.START} {num}: Connected to: {address} {self.p.ENDC}")
                 socket.settimeout(10.0)
                 socket.send("x")
                 break
 
             except BluetoothError:
-                print(f"{num}: connection timed out")
+                print(f"{self.p.WARN} {num}: connection timed out {self.p.ENDC}")
                 sleep(1)
                 continue
 
@@ -109,70 +115,66 @@ class Bluetooth():
                 pass
 
     def connect_all(self):
-        while self.lessThanTwo:
-            nearby_devices = discover_devices(duration=10, flush_cache=True,)
-            for bdaddr in nearby_devices:
-                # print("AD: ", bdaddr, lookup_name( bdaddr ))
-                if self.target_name in str(lookup_name( bdaddr )):
-                    # print("FOUND: ", bdaddr, lookup_name( bdaddr ))
-                    for key, value in self.saved_bt_devices.items():
-                        if(value[0] == str(bdaddr)):
-                            location_key = key
-                            self.target_addresses.append(bdaddr)
-                            self.target_rooms.append(location_key)
-                        else:
-                            # print(value[0])
-                            print("Found unlisted ESP device: ", bdaddr)
-                            
+        fail_count = 0
+        if self.saved_bt_devices != {}:
+            while self.lessThanExpected:
+                nearby_devices = discover_devices(duration=10, flush_cache=True,)
+                for bdaddr in nearby_devices:
+                    # print("AD: ", bdaddr, lookup_name( bdaddr ))
+                    device_name = str(lookup_name( bdaddr ))
+                    if self.target_name in device_name:
+                        # print("FOUND: ", bdaddr, lookup_name( bdaddr ))
+                        for key, value in self.saved_bt_devices.items():
+                            if(value[0] == str(bdaddr)):
+                                location_key = key
+                                self.target_addresses.append(bdaddr)
+                                self.target_rooms.append(location_key)
+                            else:
+                                # print("Found unlisted ESP device: ", bdaddr)
+                                pass
+                                
+                print(f"{self.p.START} Found: {len(self.target_addresses)} Devices {self.p.ENDC}")
 
-            print("Found: ", len(self.target_addresses), " Devices")
+                if len(self.target_addresses) == len(self.saved_bt_devices.keys()):
+                    self.lessThanExpected = False
+                elif fail_count == 3:
+                    fail_count = 0
+                    print(f"{self.p.WARN} Cant find all the sensors, continuing... {self.p.ENDC}")
+                else:
+                    self.target_addresses = []
+                    print(f"{self.p.WARN} Rescanning for remaining devices... {self.p.ENDC}")
+                    fail_count += 1
 
-            if len(self.target_addresses) == len(self.saved_bt_devices.keys()):
-                self.lessThanTwo = False
-            else:
-                self.target_addresses = []
-                print("Rescanning for remaining devices...")
+            try:
+                if len(self.target_addresses) > 0:
+                    i = 1
+                    
+                    for index in range(len(self.target_addresses)):
+                        # print("found target bluetooth device with address ", self.target_addresses[index])
+                        new_thread = Thread(target=self.data_thread, args=(self.target_addresses[index], self.target_rooms[index], self.output, i))
+                        i += 1
+                        self.sensor_threads.append(new_thread)
 
-        try:
-            if len(self.target_addresses) > 0:
-                i = 1
-                
-                for index in range(len(self.target_addresses)):
-                    print("found target bluetooth device with address ", self.target_addresses[index])
-                    new_thread = Thread(target=self.data_thread, args=(self.target_addresses[index], self.target_rooms[index], self.output, i))
-                    i += 1
-                    self.sensor_threads.append(new_thread)
+                    try:
+                        for thread in self.sensor_threads:
+                            thread.start()
+                    except:
+                        print("ERROR starting connections")
+                    finally:
+                        """ This section needs to maintain and reconnect to all known BLUETOOTH Devices
 
-                try:
-                    for thread in self.sensor_threads:
-                        thread.start()
-                except:
-                    print("ERROR starting connections")
-                finally:
-                    print("DONE")
-                    # while True:
-                    #     try:
-                    #         reading = self.output.get(block=True, timeout=2)
-                    #         # print(reading)
-                    #         for item in self.saved_bt_devices:
-                    #             # print("QUEUE: ", item)
-                    #             if item in reading.keys():
-                    #                 temperature = reading[item][0]
-                    #                 humidity = reading[item][1].strip('/r')
-                    #                 print(item, ': ', temperature, ' ', humidity)
-                    #     except KeyboardInterrupt:
-                    #         print("Closing Connections")
-                    #         for thread in self.sensor_threads:
-                    #             thread.join()
-                    #         break
-                        
-                    #     except Exception as e:
-                    #         print(e)
-                    #         pass
-                        
-            else:
-                print("could not find target bluetooth devices nearby")
-        except:
-            for thread in self.sensor_threads:
-                thread.join()
-            pass
+
+
+
+
+
+                        """
+                else:
+                    print("could not find target bluetooth devices nearby")
+            except:
+                for thread in self.sensor_threads:
+                    thread.join()
+                pass
+
+        else:
+            print("NO BLUETOOTH DEVICES SAVED")

@@ -40,9 +40,9 @@ function loadSetpoints() {
             $( "#awake-display" ).val(response['awake-time']);
             $( "#sleep-display" ).val(response['sleep-time']);
 
-            $("#home_temp").val(String(oHomeSP))
-            $("#away_temp").val(String(oAwaySP))
-            $("#sleep_temp").val(String(oSleepSP))
+            $("#home_temp").val(String(oHomeSP));
+            $("#away_temp").val(String(oAwaySP));
+            $("#sleep_temp").val(String(oSleepSP));
         },
         error: function(error) {
             console.log(error);
@@ -77,33 +77,6 @@ function sendSetpoints() {
         }
     });
 };
-// NUMBER SPINNERS
-// (function($) {
-//     $.fn.spinner = function() {
-//     this.each(function() {
-//     var el = $(this);
-    
-//     // add elements
-//     el.wrap('<span class="spinner"></span>');     
-//     el.before('<span class="sub">-</span>');
-//     el.after('<span class="add">+</span>');
-    
-//     // substract
-//     el.parent().on('click', '.sub', function () {
-//     if (el.val() > parseInt(el.attr('min')))
-//     el.val( function(i, oldval) { return (+(oldval)-.5); });
-//     });
-    
-//     // increment
-//     el.parent().on('click', '.add', function () {
-//     if (el.val() < parseInt(el.attr('max')))
-//     el.val( function(i, oldval) { return (+(oldval)+.5); });
-//     });
-//         });
-//     };
-// })(jQuery);
-    
-// $('input[type=number]').spinner();
 
 // DOUBLE SLIDER:
 $( function handleSlider() {
