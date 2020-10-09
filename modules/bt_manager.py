@@ -6,8 +6,8 @@ import re
 from modules.extras import Colors
 
 class BTManager():
-    def __init__(self, device_dict, sensor_q, bt_on):
-        self.output = sensor_q
+    def __init__(self, device_dict, bt_data_q, bt_on):
+        self.bt_data_q = bt_data_q
         self.target_name = "ESP32"
         self.target_addresses = []
         self.target_rooms = []
@@ -36,7 +36,7 @@ class BTManager():
                     self.target_addresses.append(new_value)
                     self.target_rooms.append(new_key)
                     i = len(self.target_addresses)
-                    new_thread = Thread(target=self.data_thread, args=(new_value, new_key, self.output, i))
+                    new_thread = Thread(target=self.data_thread, args=(new_value, new_key, self.bt_data_q, i))
                     self.sensor_threads.append(new_thread)
                     new_thread.start()
 
@@ -75,7 +75,7 @@ class BTManager():
                         humidity = humidity.strip('/n')
                         data_decode = [ temperature, humidity ]
 
-                        self.output.put({f"{room}": data_decode}, block=False, timeout=2)
+                        self.bt_data_q.put({f"{room}": data_decode}, block=False, timeout=2)
 
                     elif len(data_decode) > 2:
                         middle = data_decode[1]
@@ -87,7 +87,7 @@ class BTManager():
                         humidity = humidity.strip('/r').strip('/n')
                         data_decode = [ temperature, humidity ]
 
-                        self.output.put({f"{room}": data_decode}, block=False, timeout=2)
+                        self.bt_data_q.put({f"{room}": data_decode}, block=False, timeout=2)
 
                     else:
                         pass
@@ -151,7 +151,7 @@ class BTManager():
                     
                     for index in range(len(self.target_addresses)):
                         # print("found target bluetooth device with address ", self.target_addresses[index])
-                        new_thread = Thread(target=self.data_thread, args=(self.target_addresses[index], self.target_rooms[index], self.output, i))
+                        new_thread = Thread(target=self.data_thread, args=(self.target_addresses[index], self.target_rooms[index], self.bt_data_q, i))
                         i += 1
                         self.sensor_threads.append(new_thread)
 

@@ -1,305 +1,99 @@
 @import "./variables";
 
 /* ---------------------------------------------------
-    SIDEBAR STYLE
------------------------------------------------------ */
-
-.wrapper {
-    display: flex;
-    width: 100%;
-    align-items: stretch;
-    flex-wrap: nowrap;
-    box-sizing: border-box;
-    overflow: auto;
-}
-
-#sidebar {
-    display: none;
-    min-width: calc(250px + 10%);
-    background: $boxcolor;
-    transition: all 0.3s;
-}
-
-.sidebar-header {
-    border-bottom: 2px solid $active-text-dark;
-}
-
-#sidebar .sidebar-header {
-    color: $active-text-dark;
-    padding: 20px 10px;
-    overflow: auto;
-    flex-wrap: nowrap;
-}
-.sidebar-header a {
-    color: $active-text-dark;
-    display: block;
-    font-family: "Orbitron", sans-serif;
-    font-size: calc(1.25rem + ((1vw - 4.68px) * 0.8264));
-}
-
-#sidebar ul.components {
-    color: $active-text-dark;
-    padding: 20px 0;
-    border-bottom: 2px solid $active-text-dark;
-}
-
-#sidebar ul li a {
-    color: $active-text-dark;
-    padding: 15px 5px;
-    font-size: 1.1em;
-    display: block;
-}
-
-#sidebar ul li a:hover {
-    color: $primary-accent-theme;
-    background: $active-text-dark;
-    border-radius: 5px;
-}
-
-.list-unstyled {
-    list-style-type: none;
-}
-
-.button-block {
-    padding: 20px;
-}
-
-.button-block a {
-    text-align: center;
-    font-size: 0.9em !important;
-    display: block;
-    border-radius: 5px;
-    margin-bottom: 5px;
-}
-
-a.blog,
-a.github {
-    background: $primary-accent-theme;
-    color: $active-text-dark;
-    font-weight: bold;
-}
-
-a.blog:hover,
-a.github:hover {
-    background: $active-text-dark !important;
-    color: $primary-accent-theme !important;
-}
-
-.signature {
-    margin-top: 20vh;
-    text-align: center;
-    color: $active-text-dark;
-}
-/* ---------------------------------------------------
-    SIDEBAR STYLE
------------------------------------------------------ */
-.float{
-	position:fixed;
-	width:60px;
-	height:60px;
-	top:120px;
-	left:40px;
-	background:$primary-accent-theme;
-	color:$active-text-dark;
-	border-radius:50px;
-    text-align:center;
-    border: none;
-    // box-shadow: 0px 0px 3px black;
-    padding-bottom: 22px;
-}
-.float:hover {
-    cursor: pointer;
-    box-shadow: 0px 0px 4px $active-text-dark;
-    background:$active-text-dark;
-	color: $primary-accent-theme;
-}
-
-.my-float{
-	margin-top:22px;
-}
-
-.float.active {
-    box-shadow: 0px 0px 4px $active-text-dark;
-    background: $active-text-dark;
-    color: $primary-accent-theme;
-    border: none;
-}
-
-.float.big-screen {
-    display: none;
-}
-.float.small-screen {
-    display: block;
-}
-
-/* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
-#content {
-    box-sizing: border-box;
-    width: 100%;
-    color: $active-text-dark;
-    padding: 20px;
-    // min-height: 90vh;
-    transition: all 0.3s;
-    // min-width: 375px;
-    overflow: auto;
-    flex-wrap: nowrap;
-}
-
-.setting-header {
-    text-align: center;
-    margin-top: 15px;
-    font-family: "Orbitron", sans-serif;
-    font-size: calc(1.25rem + ((1vw - 4.68px) * 0.8264));
-    font-weight: 900;
-}
-.setting-subheader {
-    border-bottom: 2px solid $inactive-text-dark;
-    width: 20%;
-    margin-top: 6px;
-}
 
 /* Style inputs, select elements and textareas */
 input[type=text], input[type=file], select, textarea{
-    width: 100%;
-    padding: 12px;
-    border: 1px solid $primary-dark;
-    border-radius: 5px;
-    box-sizing: border-box;
-    resize: vertical;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid $primary-dark;
+  border-radius: 5px;
+  box-sizing: border-box;
+  resize: vertical;
 }
   
   /* Style the label to display next to the inputs */
 label {
-    padding: 12px 12px 12px 0;
-    display: inline-block;
-    font-size: 1.1em;
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+  font-size: 1.1em;
 }
   
   /* Style the submit button */
 input[type=submit] {
-    background-color: $primary-accent-theme;
-    color: $active-text-dark;
-    font-size: 1.1em;
-    padding: 12px 20px;
-    margin-top: 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    float: right;
+  background-color: $primary-accent-theme;
+  color: $active-text-dark;
+  font-size: 1.1em;
+  padding: 12px 20px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  float: right;
 }
 
 input[type=submit]:hover {
-    background-color: $active-text-dark;
-    color: $primary-accent-theme;
+  background-color: $active-text-dark;
+  color: $primary-accent-theme;
 }
 
 input[type=color] {
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    height: 45px;
-}
-  
-  /* Style the container */
-.container {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    margin-top: 40px;
-    border-radius: 5px;
-    background-color: $boxcolor;
-    padding: 15px;
-    overflow: auto;
-}
-  
-  /* Floating column for labels: 25% width */
-.col-25 {
-    float: left;
-    width: 25%;
-    margin-top: 6px;
-}
-  
-  /* Floating column for inputs: 75% width */
-.col-75 {
-    float: left;
-    width: 75%;
-    margin-top: 6px;
-}
-  
-  /* Clear floats after the columns */
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  height: 45px;
 }
 
 #hidden_choice_1 {
-    display: none;
+  display: none;
 }
 #hidden_choice_2 {
-    display: none;
+  display: none;
 }
 
 .location_search {
-    display: flex;
-    align-content: center;
-    justify-items: center;
-    margin: 0;
-    // width: 100%;
-    position: relative;
+  display: flex;
+  align-content: center;
+  justify-items: center;
+  margin: 0;
+  position: relative;
 }
 #location-search {
-    background: $iconcolor;
-    width: 100%;
-    // margin-right: 0;
-    // float: left;
-    // box-sizing: border-box;
-    transition: all 0.15s;
+  background: $iconcolor;
+  width: 100%;
+
+  transition: all 0.15s;
 }
 #location-search:focus {
-    background: $active-text-dark;
+  background: $active-text-dark;
 }
 
 .input_icon {
-    position: absolute;
-    color: $inverted-text-dark;
-    top: 10px;
-    right: 10px;
-    font-size: 20px;
-    cursor: pointer;
+  position: absolute;
+  color: $inverted-text-dark;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
 }
 
 #search-results {
-    display: none;
-}
-
-  /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 600px) {
-    .col-25, .col-75 {
-      width: 100%;
-      margin-top: 15px;
-    }
-    input[type=submit].general-settings {
-        width: 100%;
-        margin-top: 15px;
-    } 
+  display: none;
 }
 
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
-
-@media all and (min-width: 768px) {
-    #sidebar {
-        display: block;
-    }
-    .float.big-screen {
-        display: block;
-        left: calc(290px + 10%);
-    }
-    .float.small-screen {
-        display: none;
-    }
+  /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75 {
+    width: 100%;
+    margin-top: 15px;
+  }
+  input[type=submit].general-settings {
+    width: 100%;
+    margin-top: 15px;
+  } 
 }

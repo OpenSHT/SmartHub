@@ -7,48 +7,9 @@
 	{% block main_content %}  
 		<main>
 			<div class="wrapper">
-				<!-- Sidebar  -->
-				<nav id="sidebar">
-					<div class="sidebar-header">
-						<h3><a href="/settings">Settings</a></h3>
-					</div>
-
-					<ul class="list-unstyled components">
-<!--						<p>Dummy Heading</p>-->
-						<li class="side-link">
-							<a href="/settings/Tscheduler">Scheduler</a>
-                        </li>
-                        <li class="side-link">
-							<a href="/settings/Tsetup">Relay Setup</a>
-                        </li>
-                        <li class="side-link">
-							<a href="/settings/Trooms">Rooms</a>
-                        </li>
-                        <li class="side-link">
-							<a href="/settings/Tsensors">Sensors</a>
-						</li>
-					</ul>
-
-					<ul class="list-unstyled button-block">
-						<li>
-							<a href="https://opensht.tech/blog" class="blog">Community Blog</a>
-						</li>
-						<li>
-							<a href="https://github.com/OpenSHT" class="github">Github Page</a>
-						</li>
-					</ul>
-					<p class="signature">Created by Craig Treen</p>
-				</nav>
 
 				<!-- Page Content  -->
 				<div id="content">
-
-					<button type="button" class="float small-screen" id="small-float">
-						<i class="fas fa-chevron-right my-float" id="sm-icon"></i>
-					</button>
-					<button type="button" class="float big-screen active" id="big-float">
-						<i class="fas fa-chevron-left my-float" id="bg-icon"></i>
-					</button>
 
 					{% block settings_form %}
 						<div class="setting-header">General Settings</div>

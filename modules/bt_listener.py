@@ -23,8 +23,8 @@ class BTListener():
         # Format: [ "NAME", [ "MAC_ADDR", "PRIORITY" ] ]
         self.devices[new_device[0]] = new_device[1]
 
-    def check_bt_sensors(self, data_q, action_q, setpoint_q, display_q):
-        self.data_q = data_q
+    def check_bt_sensors(self, bt_data_q, action_q, setpoint_q, display_q):
+        self.bt_data_q = bt_data_q
         self.action_q = action_q
         self.display_q = display_q
 
@@ -37,7 +37,7 @@ class BTListener():
                 pass
 
             try:
-                reading = self.data_q.get(block=True, timeout=2)
+                reading = self.bt_data_q.get(block=True, timeout=2)
                 
                 for key in self.devices.keys():
                     if key in reading.keys():

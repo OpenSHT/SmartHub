@@ -1,0 +1,71 @@
+@import "./variables";
+
+// Container that wraps page content below the Navbar on every page
+main {
+  display: flex;
+  flex: 1;
+  flex-flow: column;
+  overflow: visible;   
+}
+
+#content {
+  box-sizing: border-box;
+  width: 100%;
+  color: $active-text-dark;
+  padding: 20px;
+  transition: all 0.3s;
+  overflow: auto;
+  flex-wrap: nowrap;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
+.setting-header {
+  text-align: center;
+  margin-top: 15px;
+  font-family: "Orbitron", sans-serif;
+  font-size: calc(1.25rem + ((1vw - 4.68px) * 0.8264));
+  font-weight: 900;
+}
+.setting-subheader {
+  border-bottom: 2px solid $inactive-text-dark;
+  width: 20%;
+  margin-top: 6px;
+}
+
+  /* Style the container */
+  .container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-top: 40px;
+    border-radius: 5px;
+    background-color: $boxcolor;
+    padding: 15px;
+    overflow: auto;
+  }
+    
+    /* Floating column for labels: 25% width */
+  .col-25 {
+    float: left;
+    width: 25%;
+    margin-top: 6px;
+  }
+    
+    /* Floating column for inputs: 75% width */
+  .col-75 {
+    float: left;
+    width: 75%;
+    margin-top: 6px;
+  }
+    
+    /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }

@@ -1,82 +1,126 @@
 @import "./variables";
 
 #room_form {
-    display: none;
+  display: none;
 }
 
 .col-20 {
-    float: left;
-    width: 20%;
-    text-align: center;
-    margin-top: 25px;
+  float: left;
+  width: 20%;
+  text-align: center;
+  margin-top: 25px;
 }
 .table_title {
-    margin-top: 10px;
-    font-weight: 700;
-    border-bottom: 2px solid $active-text-dark;
-    border-left: 2px solid $active-text-dark;
-    border-right: 2px solid $active-text-dark;
+  margin-top: 10px;
+  font-weight: 700;
+  border-bottom: 2px solid $active-text-dark;
+  border-left: 2px solid $active-text-dark;
+  border-right: 2px solid $active-text-dark;
 }
 
 a.add_device, a.edit_btn {
-    background: $primary-accent-theme;
-    color: $active-text-dark;
-    padding: 5px 15px;
-    border-radius: 5px;
-    margin-bottom: 5px;
-    float: right;
-    width: 45px;
-    align-content: center;
+  background: $primary-accent-theme;
+  color: $active-text-dark;
+  padding: 5px 15px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  float: right;
+  width: 45px;
+  align-content: center;
 }
 a.add_device {
-    margin-top: 25px;
-    background: yellowgreen;
+  margin-top: 25px;
+  background: yellowgreen;
 }
 a.add_device:hover {
-    background: $active-text-dark !important;
-    color: yellowgreen !important;
+  background: $active-text-dark !important;
+  color: yellowgreen !important;
 }
 a.remove_btn {
-    background: $temp-color;
-    color: $active-text-dark;
+  background: $temp-color;
+  color: $active-text-dark;
 }
 a.edit_btn:hover {
-    color: $primary-accent-theme;
-    background: $active-text-dark;
+  color: $primary-accent-theme;
+  background: $active-text-dark;
 }
 a.remove_btn:hover {
-    color: $temp-color;
-    background: $active-text-dark;
+  color: $temp-color;
+  background: $active-text-dark;
 }
 
+.room_input {
+//   margin: 0 !important;
+  width: 20% !important;
+  float: left;
+  margin-top: 5px !important;
+}
+.room_add {
+    float: left;
+    margin-top: 5px !important;
+}
+.room_sub {
+    margin-top: -20px !important;
+}
+// input[type=text] {
+//     margin-top: 5px !important;
+// }
+// .rooms {
+//   margin-top: 25px !important;
+//   float:right;
+//   width: 20%;
+// }
+
 .h-divider {
-    border-bottom: 2px solid $inactive-text-dark;
-    width: 100%;
-    margin-top: 25px;
+  border-bottom: 2px solid $inactive-text-dark;
+  width: 100%;
+  margin-top: 25px;
 }
+
 .input_wrap {
-    display: flex;
-    align-content: center;
-    justify-items: center;
-    margin: 0;
-    // width: 100%;
-    position: relative;
+  display: flex;
+  align-content: center;
+  justify-items: center;
+  margin: 0;
+  // width: 100%;
+  position: relative;
 }
+
 #room_name, #mac_addr {
-    background: $iconcolor;
-    width: 100%;
-    transition: all 0.15s;
+  background: $iconcolor;
+  width: 100%;
+  transition: all 0.15s;
+  float:left;
+}
+
+#priority_row {
+  margin-top: 4px;
+}
+.input_icon {
+  margin-top: 3px;
 }
 
 @media screen and (max-width: 600px) {
-    #room_form .col-25 {
-      width: 100%;
-      text-align: center;
-    //   margin: 40px 0px -20px 0px;
-    }
+  .table_title {
+    display: none;
+  }
+  .col-20,
+  #room_form .col-25,
+  #room_form .col-75 {
+    width: 100%;
+    text-align: center;
+  }
+  .col-20 {
+    margin-top: 0;
+  }
+  .sens_name {
+      text-align: left;
+      font-weight: 900;
+      font-size: calc(1.25rem + ((1vw - 4.68px) * 0.8264));  
+  }
 
-    input[type=submit].room_sub {
-        margin-top: 30px;
-        width: 100%;
-    }
+  .room_input {
+    margin: 10px 0 !important;
+    width: 100% !important; 
+  }
 }

@@ -18,7 +18,7 @@ def _hvac_control():
     """THREAD: Runs every 10 minutes (600 sec)
             :returns local_temp, local_hum
     """
-    global sensors_on, local_temp, local_hum, MODE, HVAC_DELAY, hvacControl, hvacLogic, SETPOINTS, HOME_AWAY, exit_event, action_q
+    global sensors_on, local_temp, local_hum, MODE, HVAC_DELAY, hvacControl, hvacLogic, SETPOINTS, HOME_AWAY, exit_event, action_q, SAVED_BT_SENSORS
 
     delayed_start = 2
     sleep(delayed_start)
@@ -40,8 +40,12 @@ def _hvac_control():
             active_temps = []
             active_keys = []
             for key in action_dict.keys():
-                if action_dict[key] and action_dict[key][0] >= highest_priority:                        
-                    highest_priority = action_dict[key][0]
+                # print(action_dict[key][0])
+                if action_dict[key] and action_dict[key][0] >= highest_priority:
+                    if key in SAVED_BT_SENSORS.keys():                        
+                        highest_priority = SAVED_BT_SENSORS[key][1]
+                    else:
+                        highest_priority = LOCAL_SENSOR_PRIORITY
 
             for key in action_dict.keys():
                 if action_dict[key] and action_dict[key][0] == highest_priority:
@@ -54,8 +58,8 @@ def _hvac_control():
                 for i in range(list_length):
                     avg_temp += active_temps[i][1]
                     avg_hum += active_temps[i][2]
-                avg_temp = avg_temp / list_length
-                avg_hum = avg_hum / list_length
+                avg_temp = round(avg_temp / list_length, 2)
+                avg_hum = round(avg_hum / list_length, 2)
                 priority = active_temps[i][0]
                 # Activate Relay Control:
                 hvacControl.relay_control(avg_temp, avg_hum, priority, MODE)
@@ -146,20 +150,82 @@ def schedules():
 
 @app.route("/rooms", methods=['POST', 'GET'])
 def rooms():
-    if request.method == "POST":
-        NEW_ROOM = request.form["room_name"]
-        NEW_MAC = request.form["mac_addr"]
-        NEW_PRIORITY = request.form["priority"]
+    global SAVED_BT_SENSORS, LOCAL_SENSOR_PRIORITY, config
 
-        print(NEW_ROOM, NEW_MAC, NEW_PRIORITY)
+    if request.method == "POST":
+        if '_priority' in request.form.keys():
+            for form_key in request.form:
+                try:
+                    if int(request.form[form_key]) == 4:
+                            for key in SAVED_BT_SENSORS:
+                                if SAVED_BT_SENSORS[key][1] == 4:
+                                    SAVED_BT_SENSORS[key][1] = 3
+                            if LOCAL_SENSOR_PRIORITY == 4:
+                                LOCAL_SENSOR_PRIORITY = 3
+                except:
+                    pass
+
+                if request.form[form_key]:
+                    """ EDITING EXISTING DEVICE
+                    """
+                    BT_PRIORITIES = ''
+                    if 'local' in form_key:
+                        LOCAL_SENSOR_PRIORITY = int(request.form[form_key])
+                        
+                        for key in SAVED_BT_SENSORS:
+                            if key in form_key:
+                                BT_PRIORITIES = BT_PRIORITIES + str(SAVED_BT_SENSORS[key][1]) + ","
+                    else:
+
+                        for key in SAVED_BT_SENSORS:
+                            if key in form_key:
+                                SAVED_BT_SENSORS[key][1] = int(request.form[form_key])
+                                BT_PRIORITIES = BT_PRIORITIES + str(request.form[form_key]) + ","
+                            else:
+                                BT_PRIORITIES = BT_PRIORITIES + str(SAVED_BT_SENSORS[key][1]) + ","
+                                
+                    config.set('BT_DEVICES', 'bt_priorities', BT_PRIORITIES.rstrip(','))
+                    config.set('HVAC', 'local_sensor_priority', str(LOCAL_SENSOR_PRIORITY))
+                    with open('saved_config.ini', 'w') as f:
+                        config.write(f)
+        else:
+            """ ADDING NEW DEVICE
+            """
+            device = request.form["room_name"]
+            mac = request.form["mac_addr"]
+            priority = request.form["priority"]
+
+            if device in SAVED_BT_SENSORS.keys():
+                print("Device already exists")
+            
+            else:
+                if priority == '4':
+                    for key in SAVED_BT_SENSORS:
+                        if SAVED_BT_SENSORS[key][1] == 4:
+                            print("Reducing Priority")
+                            SAVED_BT_SENSORS[key][1] = 3
+                    if LOCAL_SENSOR_PRIORITY == 4:
+                        print("Reducing Priority")
+                        LOCAL_SENSOR_PRIORITY = 3
+
+                PRIORITY = config.get('BT_DEVICES', 'bt_priorities') + ',' + str(priority)
+                MACS = config.get('BT_DEVICES', 'bt_macs') + ',' + str(mac)
+                ROOMS = config.get('BT_DEVICES', 'bt_rooms') + ',' + str(device)
+                
+                SAVED_BT_SENSORS[device] = [mac, int(priority)]
+
+                config.set('BT_DEVICES', 'bt_rooms', ROOMS)
+                config.set('BT_DEVICES', 'bt_macs', MACS)
+                config.set('BT_DEVICES', 'bt_priorities', PRIORITY)
+                with open('saved_config.ini', 'w') as f:
+                    config.write(f)                
 
     return render_template("hub/rooms.html", title=" - Rooms")
 
 
 @app.route("/settings", methods=['POST', 'GET'])
-@app.route("/settings/<page>", methods=['POST', 'GET'])
 def settings(page=None):
-    """SETTINGS PAGE
+    """ SETTINGS PAGE
     """
     global BACKGROUND_TYPE, BACKGROUND_POS, INTERFACE_THEME, INTERFACE_UNITS, BACKGROUND_COLOR, BACKGROUND_FILE, WEATHER_LOCATION, weatherAPI, RESULT_LIST, LOCATION
 
@@ -196,11 +262,7 @@ def settings(page=None):
         with open('saved_config.ini', 'w') as f:
                     config.write(f)
         
-    # RETURN THE SELECTED SETTING PAGE
-    if page:
-        return render_template(f"hub/settings/{page}.html")
-    else:
-        return render_template("hub/settings.html", title=" - Settings")
+    return render_template("hub/settings.html", title=" - Settings")
 
 
 @app.route('/_load_bt_sensors', methods=['POST'])
@@ -219,6 +281,31 @@ def update_rooms():
     bt_dict['local_values'] = [ local_temp, local_hum, LOCAL_SENSOR_PRIORITY ]
 
     return jsonify(bt_dict)
+
+@app.route('/_remove_device', methods=['POST'])
+def remove_device():
+    global SAVED_BT_SENSORS, config
+
+    if request.method == 'POST':
+        device = request.form["device"]
+        if device in SAVED_BT_SENSORS.keys():
+            del SAVED_BT_SENSORS[device]
+
+            BT_PRIORITIES = ''
+            BT_MACS = ''
+            BT_ROOMS = ''
+            for key in SAVED_BT_SENSORS:
+                BT_ROOMS += str(key) + ','
+                BT_MACS += str(SAVED_BT_SENSORS[key][0]) + ','
+                BT_PRIORITIES += str(SAVED_BT_SENSORS[key][1]) + ','
+
+            config.set('BT_DEVICES', 'bt_rooms', BT_ROOMS.rstrip(','))
+            config.set('BT_DEVICES', 'bt_macs', BT_MACS.rstrip(','))
+            config.set('BT_DEVICES', 'bt_priorities', BT_PRIORITIES.rstrip(','))
+            with open('saved_config.ini', 'w') as f:
+                    config.write(f)
+
+        return redirect(url_for("rooms"))
 
 @app.route('/_update_thermostat', methods=['POST'])
 def update_sensor_data():

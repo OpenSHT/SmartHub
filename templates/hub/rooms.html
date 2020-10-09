@@ -27,7 +27,7 @@
                 <a href="#" id="add_device" class="add_device"><i class="fas fa-plus"></i></a>
             </div>
 
-            <form id="room_form" action="#" method="post">
+            <form id="room_form" action="" method="post">
                 <!-- ROOM ADDITION FORM -->
                 <div class="row">
                     <h3 class="h-divider">Add new room:</h3>
@@ -39,7 +39,7 @@
                     </div>
                     <div class="col-75 search_wrapper">
                         <div class="input_wrap">
-                            <input type="text" id="room_name" name="room_name" placeholder="Bedroom"/>
+                            <input type="text" class="room_add" id="room_name" name="room_name" placeholder="Bedroom_(no_spaces)"/>
                             <i class="fas fa-house-user input_icon"></i>
                         </div>
                     </div>
@@ -51,13 +51,13 @@
                     </div>
                     <div class="col-75 search_wrapper">
                         <div class="input_wrap">
-                            <input type="text" id="mac_addr" name="mac_addr" placeholder="24:62:AB:F9:10:9E"/>
+                            <input type="text" class="room_add" id="mac_addr" name="mac_addr" placeholder="24:62:AB:F9:10:9E"/>
                             <i class="fab fa-bluetooth input_icon"></i>
                         </div>
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row" id="priority_row">
                     <div class="col-25">
                         <label>Priority: </label>
                     </div>
@@ -74,7 +74,7 @@
                 </div>
 
                 <div class="row">
-                    <input class="rooms" type="submit" value="Submit">
+                    <input class="rooms room_input room_sub" type="submit" value="Submit" style="float:right;width:20%;margin-top: 20px !important;">
                 </div>
                 <div class="h-divider"></div>
             </form>

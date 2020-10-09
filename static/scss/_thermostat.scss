@@ -1,42 +1,39 @@
 @import "./variables";
 
-main {
-    display: flex;
-    flex: 1;
-    flex-flow: column;
-    overflow: visible;   
-  }
+/* ---------------------------------------------------
+    THERMOSTAT.HTML STYLES
+----------------------------------------------------- */
   
 .leftbox {
-    display: flex;
-    flex-flow: column;
-    height: 100%;
-    flex: 1;
-    margin: 0;
-    padding: 15px 15px 15px 15px;
-    color: $active-text-dark;
-    font-family: "Orbitron", sans-serif;
-    font-weight: 500;
-    justify-content: space-around;
-    justify-items: center;
-    text-justify: center;
-    text-align: center;
-  }
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  flex: 1;
+  margin: 0;
+  padding: 15px 15px 15px 15px;
+  color: $active-text-dark;
+  font-family: "Orbitron", sans-serif;
+  font-weight: 500;
+  justify-content: space-around;
+  justify-items: center;
+  text-justify: center;
+  text-align: center;
+}
   
 .rightbox {
-    display: flex;
-    flex-flow: column;
-    height: 100%;
-    flex: 1;
-    min-height: 300px;
-    margin: 0;
-    padding: 0px 15px 15px 15px;
-    color: $active-text-dark;
-    font-family: 'Poppins', sans-serif;
-    justify-content: center;
-    justify-items: center;
-    text-align: center;
-  }
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  flex: 1;
+  min-height: 300px;
+  margin: 0;
+  padding: 0px 15px 15px 15px;
+  color: $active-text-dark;
+  font-family: 'Poppins', sans-serif;
+  justify-content: center;
+  justify-items: center;
+  text-align: center;
+}
 
 .sensordata, .weatherdata {
   background: $boxcolor;
@@ -204,6 +201,11 @@ main {
   flex: 1;
   min-height: 130px;
   margin-left: 2.5%;
+}
+
+canvas#chart_canvas {
+  background: transparent;
+  border-color: transparent;
 }
 
 .icon-back {
