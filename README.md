@@ -26,6 +26,7 @@
 * [Troubleshooting](https://github.com/OpenSHT/SmartHub#troubleshooting)
 * [Technologies](https://github.com/OpenSHT/SmartHub#technologies)
 * [Requirements](https://github.com/OpenSHT/SmartHub#requirements)
+* [Pseudo Code](https://github.com/OpenSHT/SmartHub#pseudo-code)
 * [Mobile Screenshots](https://github.com/OpenSHT/SmartHub#mobile-screenshots)
 * [Desktop Screenshots](https://github.com/OpenSHT/SmartHub#screenshots)
 
@@ -127,7 +128,7 @@
 </ul>
 
 ## Pseudo Code:
-![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/pseudo_code.pdf?raw=true)
+![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/pseudo_code.png)
 
 
 ## Mobile Screenshots
