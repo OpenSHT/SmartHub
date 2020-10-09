@@ -8,12 +8,17 @@
 ![GitHub stars](https://img.shields.io/github/stars/OpenSHT/SmartHub?style=social)
 ![GitHub contributors](https://img.shields.io/github/contributors/OpenSHT/SmartHub)
 
-<h4>This project aims to fill a gap in the market of smart home thermostats for Do-It-Yourselfers; those looking to build their own projects without having to tackle the learning curve of larger ecosystems (OpenHAB, SmartThings, etc).</h4>
+## Reason to Exist:
 
-<p>The end goal is to provide greater extensibility than modern competitors (EcoBee, Nest, etc) in terms of extra sensors and custom settings on your homes temperature control. Currently the system supports:</p>
+<h4>This project aims to fill a gap in the market of smart home thermostats for Do-It-Yourselfers and Power-users; those looking to build their own projects and have full control, without having to tackle the learning curve of larger ecosystems (OpenHAB, SmartThings, etc).</h4>
+
+
+<p>The goal is to provide greater extensibility than modern competitors (EcoBee, Nest, etc) in terms of extra sensors, types of sensors and custom settings on your homes temperature control. Currently the system supports:</p>
 
 <ul>
-	<li>up to x20 BLE temperature/humidity/motion sensors (Indoor/Outdoor)</li>
+	<li>up to x20 Bluetooth Classic temperature/humidity/motion sensors (Indoor/Outdoor)</li>
+    <li>Unlimited 2.4 GHz NRF wireless sensors (within limits of compute power)</li>
+    <li>Future support for simultaneous use of BLE sensors</li>
 	<li>App settings for home, awake, and away temperature setpoints</li>
 	<li>Intelligent operation by correlating with outdoor temperature (OpenWeatherMap/Sensors)</li>
 </ul>
@@ -107,9 +112,13 @@
         
 ## Troubleshooting
 
-- "Permission denied" when trying to read a serial device:
+- "Permission denied" when trying to read a serial device. first step, list your usb connections with:
+
+        ls /dev/tty*
+
+- next, we need to give to give ourselves permission to read and write to it with:
     
-        - sudo chmod a+rw /dev/ttyUSB0
+        sudo chmod a+rw /dev/ttyUSB0
         
         
 ## Technologies
@@ -128,7 +137,7 @@
 </ul>
 
 ## Pseudo Code:
-![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/pseudo_code.png)
+![alt text](https://github.com/OpenSHT/SmartHub/blob/master/resources/pseudo_code.png?raw=true)
 
 
 ## Mobile Screenshots
